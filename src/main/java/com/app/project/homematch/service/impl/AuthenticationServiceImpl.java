@@ -1,6 +1,6 @@
 package com.app.project.homematch.service.impl;
 
-import com.app.project.homematch.config.JwtService;
+import com.app.project.homematch.config.security.JwtService;
 import com.app.project.homematch.entity.Role;
 import com.app.project.homematch.entity.User;
 import com.app.project.homematch.repository.UserRepository;
@@ -53,10 +53,8 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 
     @Override
     public AuthenticationResponse authenticate(AuthenticationRequest request) {
-        //check if username and password are correct
         authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(request.getUsername(), request.getPassword()));
 
-        // if they are correct
         User user = repository.findByUsername(request.getUsername()).orElseThrow(() -> new UsernameNotFoundException("User not found"));
         String token = jwtService.generateToken(user);
         return new AuthenticationResponse(token);

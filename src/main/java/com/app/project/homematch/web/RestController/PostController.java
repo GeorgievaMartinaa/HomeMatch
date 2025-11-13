@@ -3,7 +3,6 @@ package com.app.project.homematch.web.RestController;
 import com.app.project.homematch.service.PostService;
 import com.app.project.homematch.web.DTO.FormPostRequest;
 import com.app.project.homematch.web.DTO.OpenAIResponse;
-import com.app.project.homematch.web.DTO.PostDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -27,9 +26,7 @@ public class PostController {
         OpenAIResponse response = postService.analyzePost(postText);
 
         if (response.getIsAccommodationPost()) {
-            PostDTO postDTO = postService.createNewPost(formPostRequest, response);
-
-            postService.savePost(postDTO);
+            postService.newPostFromRequest(formPostRequest, response);
 
             return ResponseEntity.ok("New post created");
         }

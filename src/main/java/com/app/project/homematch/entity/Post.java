@@ -2,12 +2,14 @@ package com.app.project.homematch.entity;
 
 import com.app.project.homematch.valueObject.Money;
 import com.app.project.homematch.valueObject.PostId;
+import com.app.project.homematch.web.DTO.PostDTO;
 import jakarta.persistence.AttributeOverride;
 import jakarta.persistence.AttributeOverrides;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embedded;
 import jakarta.persistence.EmbeddedId;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EntityListeners;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -15,6 +17,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.Instant;
 
@@ -24,6 +27,7 @@ import java.time.Instant;
 @Data
 @Builder
 @AllArgsConstructor
+@EntityListeners(AuditingEntityListener.class)
 public class Post {
 
     @EmbeddedId
@@ -53,20 +57,16 @@ public class Post {
     @Column(name = "creator_id")
     private Long creatorId;
 
-    public Post(String title, String description, String location, Money price, String originalPostURL, String fetchedFrom) {
-        this.title = title;
-        this.description = description;
-        this.location = location;
-        this.price = price;
-        this.originalPostURL = originalPostURL;
-        this.fetchedFrom = fetchedFrom;
-    }
-
-    public Post(String title, String description, String location, Money price, Long creatorId) {
-        this.title = title;
-        this.description = description;
-        this.location = location;
-        this.price = price;
-        this.creatorId = creatorId;
+    public static Post create(PostDTO postDTO){
+        return Post.builder()
+                .id(PostId.generatePostId())
+                .title(postDTO.getTitle())
+                .description(postDTO.getDescription())
+                .creatorId(postDTO.getCreatorId())
+                .fetchedFrom(postDTO.getExternalApi())
+                .location(postDTO.getLocation())
+                .originalPostURL(postDTO.getOriginalPostUrl())
+                .price(new Money(postDTO.getPrice(), postDTO.getCurrency()))
+                .build();
     }
 }
