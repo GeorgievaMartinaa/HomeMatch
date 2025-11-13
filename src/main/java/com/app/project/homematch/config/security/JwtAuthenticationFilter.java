@@ -1,4 +1,4 @@
-package com.app.project.homematch.config;
+package com.app.project.homematch.config.security;
 
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;

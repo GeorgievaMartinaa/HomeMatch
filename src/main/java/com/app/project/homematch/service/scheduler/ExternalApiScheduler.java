@@ -2,7 +2,10 @@ package com.app.project.homematch.service.scheduler;
 
 import com.app.project.homematch.service.PostService;
 import com.app.project.homematch.service.externalAPI.ExternalAPIClient;
+import com.app.project.homematch.service.mapper.PostMapper;
 import com.app.project.homematch.web.DTO.FetchedPostDTO;
+import com.app.project.homematch.web.DTO.OpenAIResponse;
+import com.app.project.homematch.web.DTO.PostDTO;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -19,20 +22,28 @@ public class ExternalApiScheduler {
         this.postService = postService;
     }
 
-    public String fetchNewData(){
-        // fetch data from each externalAPIs
+    public void fetchNewData() {
         List<FetchedPostDTO> allPosts = new ArrayList<>();
-        for(ExternalAPIClient externalAPI : externalAPIs){
+        for (ExternalAPIClient externalAPI : externalAPIs) {
             allPosts.addAll(externalAPI.fetchAllNewPosts());
         }
 
-        //convert to PostDTO
+        List<PostDTO> relevantPosts = new ArrayList<>();
 
-        //filter data
+        allPosts.forEach(post -> {
+            String postText = getPostText(post);
 
-        //save filtered data
+            OpenAIResponse response = postService.analyzePost(postText);
+            if (response.getIsAccommodationPost()) {
+                relevantPosts.add(PostMapper.toDTO(post, response));
+            }
+        });
 
-        return null;
+        relevantPosts.forEach(postService::newFetchedPost);
+    }
+
+    private String getPostText(FetchedPostDTO post) {
+        return post.getTitle() + post.getDescription();
     }
 
 }

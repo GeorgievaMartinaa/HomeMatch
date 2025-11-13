@@ -6,6 +6,9 @@ import com.app.project.homematch.web.DTO.UserDTO;
 public class UserMapper {
 
     public static UserDTO toUserDTO (User user){
-        return UserDTO.builder().username(user.getUsername()).build();
+        return UserDTO.builder()
+                .id(user.getId().getValue())
+                .username(user.getUsername())
+                .build();
     }
 }

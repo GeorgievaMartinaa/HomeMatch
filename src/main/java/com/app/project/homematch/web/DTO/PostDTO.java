@@ -5,7 +5,6 @@ import lombok.Builder;
 import lombok.Data;
 
 import java.math.BigDecimal;
-import java.time.LocalDate;
 
 @Data
 @Builder
@@ -16,7 +15,6 @@ public class PostDTO {
     private String location;
     private BigDecimal price;
     private Currency currency;
-    private LocalDate postedOn;
     private Long creatorId;
     private String externalApi;
     private String originalPostUrl;

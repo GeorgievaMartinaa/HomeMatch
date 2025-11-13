@@ -8,10 +8,6 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 
-import java.time.Instant;
-import java.time.LocalDate;
-import java.time.ZoneId;
-import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -38,19 +34,17 @@ public class RedditAPIClient implements ExternalAPIClient {
 
         List<FetchedPostDTO> posts = new ArrayList<>();
         try {
-           JsonNode root = objectMapper.readTree(response);
+            JsonNode root = objectMapper.readTree(response);
 
             JsonNode jsonPostsList = root.path("data").path("children");
 
-            for (JsonNode jsonPost: jsonPostsList) {
+            for (JsonNode jsonPost : jsonPostsList) {
                 FetchedPostDTO post = new FetchedPostDTO();
                 JsonNode data = jsonPost.path("data");
 
-                post.setId(data.path("id").asText());
                 post.setTitle(data.path("title").asText());
                 post.setDescription(data.path("selftext").asText());
                 post.setFetchedFrom("Reddit");
-                post.setCreated_on(convertSecondToLocalDate(data.path("created_utc").asLong()));
                 post.setUrlLink(data.path("url").asText());
 
                 posts.add(post);
@@ -58,17 +52,9 @@ public class RedditAPIClient implements ExternalAPIClient {
 
         } catch (JsonProcessingException e) {
             e.printStackTrace();
-            //frli exeption
-            //return prazno
+            throw new RuntimeException(e);
         }
 
         return posts;
-    }
-
-    public static LocalDate convertSecondToLocalDate(long seconds) {
-        Instant instant = Instant.ofEpochSecond(seconds);
-        ZoneId zoneId = ZoneId.systemDefault();
-        ZonedDateTime zonedDateTime = instant.atZone(zoneId);
-        return zonedDateTime.toLocalDate();
     }
 }
