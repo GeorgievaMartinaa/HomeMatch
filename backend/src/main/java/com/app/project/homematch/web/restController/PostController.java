@@ -1,8 +1,8 @@
-package com.app.project.homematch.web.RestController;
+package com.app.project.homematch.web.restController;
 
 import com.app.project.homematch.service.PostService;
-import com.app.project.homematch.web.DTO.FormPostRequest;
-import com.app.project.homematch.web.DTO.OpenAIResponse;
+import com.app.project.homematch.web.requests.FormPostRequest;
+import com.app.project.homematch.web.responses.OpenAIResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;

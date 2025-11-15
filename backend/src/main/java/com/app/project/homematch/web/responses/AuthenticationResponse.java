@@ -1,4 +1,4 @@
-package com.app.project.homematch.web.DTO.auth;
+package com.app.project.homematch.web.responses;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

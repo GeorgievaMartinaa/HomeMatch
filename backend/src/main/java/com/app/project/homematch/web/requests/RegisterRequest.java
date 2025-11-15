@@ -1,4 +1,4 @@
-package com.app.project.homematch.web.DTO.auth;
+package com.app.project.homematch.web.requests;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AllArgsConstructor;

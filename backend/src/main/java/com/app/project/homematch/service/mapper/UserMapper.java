@@ -1,7 +1,7 @@
 package com.app.project.homematch.service.mapper;
 
 import com.app.project.homematch.entity.User;
-import com.app.project.homematch.web.DTO.UserDTO;
+import com.app.project.homematch.entity.DTO.UserDTO;
 
 public class UserMapper {
 

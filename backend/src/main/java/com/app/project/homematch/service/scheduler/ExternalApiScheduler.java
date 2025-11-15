@@ -3,9 +3,9 @@ package com.app.project.homematch.service.scheduler;
 import com.app.project.homematch.service.PostService;
 import com.app.project.homematch.service.externalAPI.ExternalAPIClient;
 import com.app.project.homematch.service.mapper.PostMapper;
-import com.app.project.homematch.web.DTO.FetchedPostDTO;
-import com.app.project.homematch.web.DTO.OpenAIResponse;
-import com.app.project.homematch.web.DTO.PostDTO;
+import com.app.project.homematch.entity.DTO.FetchedPostDTO;
+import com.app.project.homematch.web.responses.OpenAIResponse;
+import com.app.project.homematch.entity.DTO.PostDTO;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;

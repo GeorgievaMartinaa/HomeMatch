@@ -4,7 +4,7 @@ import com.app.project.homematch.repository.UserRepository;
 import com.app.project.homematch.service.UserService;
 import com.app.project.homematch.service.mapper.UserMapper;
 import com.app.project.homematch.valueObject.UserId;
-import com.app.project.homematch.web.DTO.UserDTO;
+import com.app.project.homematch.entity.DTO.UserDTO;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

@@ -1,8 +1,8 @@
 package com.app.project.homematch.entity;
 
+import com.app.project.homematch.entity.DTO.PostDTO;
 import com.app.project.homematch.valueObject.Money;
 import com.app.project.homematch.valueObject.PostId;
-import com.app.project.homematch.web.DTO.PostDTO;
 import jakarta.persistence.AttributeOverride;
 import jakarta.persistence.AttributeOverrides;
 import jakarta.persistence.Column;

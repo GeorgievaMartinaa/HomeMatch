@@ -1,4 +1,4 @@
-package com.app.project.homematch.web.DTO;
+package com.app.project.homematch.web.responses;
 
 import lombok.Data;
 

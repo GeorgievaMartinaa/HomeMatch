@@ -1,9 +1,9 @@
-package com.app.project.homematch.web.RestController;
+package com.app.project.homematch.web.restController;
 
 import com.app.project.homematch.service.AuthenticationService;
-import com.app.project.homematch.web.DTO.auth.AuthenticationRequest;
-import com.app.project.homematch.web.DTO.auth.AuthenticationResponse;
-import com.app.project.homematch.web.DTO.auth.RegisterRequest;
+import com.app.project.homematch.web.requests.AuthenticationRequest;
+import com.app.project.homematch.web.responses.AuthenticationResponse;
+import com.app.project.homematch.web.requests.RegisterRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;

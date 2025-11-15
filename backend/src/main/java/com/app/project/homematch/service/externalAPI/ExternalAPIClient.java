@@ -1,6 +1,6 @@
 package com.app.project.homematch.service.externalAPI;
 
-import com.app.project.homematch.web.DTO.FetchedPostDTO;
+import com.app.project.homematch.entity.DTO.FetchedPostDTO;
 import org.springframework.stereotype.Component;
 
 import java.util.List;

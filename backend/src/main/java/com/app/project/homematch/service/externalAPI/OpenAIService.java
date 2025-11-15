@@ -1,6 +1,6 @@
 package com.app.project.homematch.service.externalAPI;
 
-import com.app.project.homematch.web.DTO.OpenAIResponse;
+import com.app.project.homematch.web.responses.OpenAIResponse;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;

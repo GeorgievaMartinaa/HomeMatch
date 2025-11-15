@@ -3,9 +3,9 @@ package com.app.project.homematch.service.mapper;
 import com.app.project.homematch.entity.Post;
 import com.app.project.homematch.valueObject.Currency;
 import com.app.project.homematch.valueObject.Money;
-import com.app.project.homematch.web.DTO.FetchedPostDTO;
-import com.app.project.homematch.web.DTO.OpenAIResponse;
-import com.app.project.homematch.web.DTO.PostDTO;
+import com.app.project.homematch.entity.DTO.FetchedPostDTO;
+import com.app.project.homematch.web.responses.OpenAIResponse;
+import com.app.project.homematch.entity.DTO.PostDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
