@@ -3,7 +3,6 @@ package com.app.project.homematch.valueObject;
 import com.app.project.homematch.utils.TsidGenerator;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
-import lombok.Data;
 import lombok.Getter;
 
 import java.io.Serializable;
