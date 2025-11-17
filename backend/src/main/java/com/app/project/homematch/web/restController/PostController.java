@@ -1,24 +1,31 @@
 package com.app.project.homematch.web.restController;
 
+import com.app.project.homematch.entity.DTO.PostDTO;
 import com.app.project.homematch.service.PostService;
+import com.app.project.homematch.service.mapper.PostMapper;
 import com.app.project.homematch.web.requests.FormPostRequest;
 import com.app.project.homematch.web.responses.OpenAIResponse;
+import com.app.project.homematch.web.responses.PostResponse;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/api/v1/post")
 @RequiredArgsConstructor
 public class PostController {
 
     private final PostService postService;
 
-    @PostMapping("/post/create")
+    @PostMapping("/create")
     public ResponseEntity<String> createNewPost(@RequestBody FormPostRequest formPostRequest) {
 
         String postText = formPostRequest.getTitle() + formPostRequest.getDescription();
@@ -28,15 +35,22 @@ public class PostController {
         if (response.getIsAccommodationPost()) {
             postService.newPostFromRequest(formPostRequest, response);
 
-            return ResponseEntity.ok("New post created");
+            return new ResponseEntity("New post created", HttpStatus.CREATED);
         }
 
-        return ResponseEntity.ok("This post can't be created");
+        return new ResponseEntity("This post can't be created", HttpStatus.BAD_REQUEST);
 
     }
 
-    @GetMapping("/test")
-    public ResponseEntity<String> test() {
-        return ResponseEntity.ok("Test Passed");
+    @GetMapping
+    public ResponseEntity<Page<PostResponse>> allPosts(@RequestParam(defaultValue = "0") Integer pageNumber,
+                                                       @RequestParam(defaultValue = "5") Integer pageSize) {
+        Page<PostDTO> postDTOPage = postService.getAllPosts(pageSize, pageNumber);
+        return new ResponseEntity(postDTOPage.map(PostMapper::toPostResponse), HttpStatus.OK);
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<PostResponse> post(@PathVariable Long id){
+        return new ResponseEntity(PostMapper.toPostResponse(postService.getById(id)), HttpStatus.OK);
     }
 }
