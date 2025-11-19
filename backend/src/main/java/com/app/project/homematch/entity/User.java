@@ -43,6 +43,8 @@ public class User implements UserDetails {
     @Enumerated(EnumType.STRING)
     @Column(name = "role")
     private Role role;
+    @Column(name = "verified")
+    private Boolean verified;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -67,5 +69,13 @@ public class User implements UserDetails {
     @Override
     public boolean isEnabled() {
         return true;
+    }
+
+    public Boolean isVerified(){
+        return this.verified;
+    }
+
+    public void verify(){
+        this.verified = true;
     }
 }

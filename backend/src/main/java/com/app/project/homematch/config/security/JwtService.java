@@ -1,6 +1,10 @@
 package com.app.project.homematch.config.security;
 
+import com.app.project.homematch.exceptions.ExpiredVerificationTokenException;
+import com.app.project.homematch.exceptions.InvalidVerificationTokenException;
 import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.ExpiredJwtException;
+import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
@@ -10,6 +14,8 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 import javax.crypto.SecretKey;
+import java.time.Duration;
+import java.time.Instant;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -45,6 +51,40 @@ public class JwtService {
                 .signWith(getSigningKey())
                 .compact();
 
+    }
+
+    public String generateVerificationToken(String username) {
+        Instant now = Instant.now();
+        byte[] keyBytes = Decoders.BASE64.decode(SECRET_KEY);
+        SecretKey key = Keys.hmacShaKeyFor(keyBytes);
+
+        return Jwts.builder()
+                .subject(username)
+                .claim("purpose", "email_verification")
+                .issuedAt(Date.from(now))
+                .expiration(Date.from(now.plus(Duration.ofMinutes(30))))
+                .signWith(key, Jwts.SIG.HS256)
+                .compact();
+    }
+
+    public String verifyTokenAndExtractUsername(String token) {
+        Claims claims;
+        try {
+            byte[] keyBytes = Decoders.BASE64.decode(SECRET_KEY);
+            SecretKey key = Keys.hmacShaKeyFor(keyBytes);
+
+            claims = Jwts.parser()
+                    .verifyWith(key)
+                    .build()
+                    .parseSignedClaims(token)
+                    .getPayload();
+        } catch (ExpiredJwtException e) {
+            throw new ExpiredVerificationTokenException();
+        } catch (JwtException e) {
+            throw new InvalidVerificationTokenException();
+        }
+
+        return claims.getSubject();
     }
 
     public boolean isTokenValid(String token, UserDetails userDetails) {

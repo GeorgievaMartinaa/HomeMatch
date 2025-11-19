@@ -3,14 +3,15 @@ package com.app.project.homematch.service.impl;
 import com.app.project.homematch.config.security.JwtService;
 import com.app.project.homematch.entity.Role;
 import com.app.project.homematch.entity.User;
+import com.app.project.homematch.exceptions.UserNotVerifiedException;
 import com.app.project.homematch.repository.UserRepository;
 import com.app.project.homematch.service.AuthenticationService;
+import com.app.project.homematch.service.EmailService;
 import com.app.project.homematch.utils.TsidGenerator;
 import com.app.project.homematch.valueObject.BirthDate;
 import com.app.project.homematch.valueObject.ContactInfo;
 import com.app.project.homematch.valueObject.UserId;
 import com.app.project.homematch.web.requests.AuthenticationRequest;
-import com.app.project.homematch.web.responses.AuthenticationResponse;
 import com.app.project.homematch.web.requests.RegisterRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -27,9 +28,10 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     private final PasswordEncoder passwordEncoder;
     private final JwtService jwtService;
     private final AuthenticationManager authenticationManager;
+    private final EmailService emailService;
 
     @Override
-    public AuthenticationResponse register(RegisterRequest request) {
+    public void register(RegisterRequest request) {
         User user = new User();
 
         user.setId(UserId.toUserId(TsidGenerator.getInstance().generateNewTsid()));
@@ -44,19 +46,54 @@ public class AuthenticationServiceImpl implements AuthenticationService {
                 .build());
         user.setBirthDate(BirthDate.builder().birthDate(request.getBirthDate()).build());
         user.setRole(Role.User);
+        user.setVerified(false);
 
         repository.save(user);
 
-        String token = jwtService.generateToken(user);
-        return new AuthenticationResponse(token);
+        String token = jwtService.generateVerificationToken(user.getUsername());
+        emailService.sendVerificationEmail(token, user.getContact().getEmail());
     }
 
     @Override
-    public AuthenticationResponse authenticate(AuthenticationRequest request) {
+    public String login(AuthenticationRequest request) {
+        User user = getUser(request.getUsername());
+
+        if (!user.isVerified())
+            throw new UserNotVerifiedException();
+
         authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(request.getUsername(), request.getPassword()));
 
-        User user = repository.findByUsername(request.getUsername()).orElseThrow(() -> new UsernameNotFoundException("User not found"));
-        String token = jwtService.generateToken(user);
-        return new AuthenticationResponse(token);
+        return jwtService.generateToken(user);
+    }
+
+    @Override
+    public String verifyAccount(String token) {
+
+        String username = jwtService.verifyTokenAndExtractUsername(token);
+
+        User user = getUser(username);
+
+        if (user.isVerified()) {
+            return "Email is already verified";
+        }
+
+        user.verify();
+        repository.save(user);
+        return "Email verification successful";
+
+    }
+
+    @Override
+    public void resendVerification(String username) {
+        String token = jwtService.generateVerificationToken(username);
+
+        User user = getUser(username);
+
+        emailService.sendVerificationEmail(token, user.getContact().getEmail());
+    }
+
+    private User getUser(String username){
+        return repository.findByUsername(username).orElseThrow(() -> new UsernameNotFoundException(username));
+
     }
 }
