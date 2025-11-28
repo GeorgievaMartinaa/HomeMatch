@@ -1,9 +1,11 @@
 import './App.css'
+import LoginPage from "@/pages/auth/LoginPage";
+import RegisterPage from "@/pages/auth/RegisterPage";
 
 function App() {
  return (
-     <h1 className="text-3xl font-bold underline">Hello world</h1>
- )
+   <RegisterPage/>
+  )
 }
 
 export default App
