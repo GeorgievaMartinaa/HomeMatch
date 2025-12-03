@@ -1,10 +1,18 @@
 import './App.css'
 import LoginPage from "@/pages/auth/LoginPage";
-import RegisterPage from "@/pages/auth/RegisterPage";
+import { Navigate, Route, Routes } from 'react-router';
+import { ProtectedRoute } from '@/ProtectedRoute.jsx'
+import RegisterPage from '@/pages/auth/RegisterPage.jsx'
 
 function App() {
  return (
-   <RegisterPage/>
+   <Routes>
+    <Route element={<ProtectedRoute />}>
+      <Route path={'/'}><h1>Hello user</h1></Route>
+    </Route>
+    <Route path={'login'} element={<LoginPage />} />
+    <Route path={'register'} element={<RegisterPage />} />
+   </Routes>
   )
 }
 

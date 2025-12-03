@@ -14,12 +14,55 @@ import {
   FieldLabel,
 } from "@/components/ui/field"
 import { Input } from "@/components/ui/input"
-import {useState} from "react";
+import { useContext, useEffect, useState } from "react"
+import { AuthContext } from '@/context/authContext.jsx'
+import { useNavigate } from "react-router"
 
 export function LoginForm() {
 
-  const [username, setUsername] = useState('');
-  const [password, setPassword] = useState('');
+  const [username, setUsername] = useState('')
+  const [password, setPassword] = useState('')
+  const [error, setError] = useState(null);
+
+  const { login, isAuthenticated, isLoading } = useContext(AuthContext) // AuthContext login()
+  const navigate = useNavigate()
+
+  useEffect(() => {
+    if (isAuthenticated) {
+      navigate('/');
+    }
+  }, [isAuthenticated, navigate]);
+
+  async function handleLogin(e) {
+    e.preventDefault()
+    setError("")
+
+    try {
+      // SEND LOGIN REQUEST TO BACKEND
+      const response = await fetch("http://localhost:8080/api/v1/auth/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ username, password }),
+      })
+
+      if (!response.ok) {
+        throw new Error("Invalid credentials")
+      }
+
+      const data = await response.json()
+      console.log(data)
+      const token = data.token // the token your backend returns
+
+      // SAVE TOKEN IN AUTH CONTEXT
+      login(token)
+
+      // REDIRECT TO PROTECTED PAGE
+      navigate("/")
+
+    } catch (err) {
+      setError(err.message)
+    }
+  }
 
   return (
     <div className={cn("flex flex-col gap-6", className)} {...props}>
@@ -31,11 +74,13 @@ export function LoginForm() {
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <form onSubmit={handleLogin()}>
+          <form onSubmit={handleLogin}>
             <FieldGroup>
               <Field>
                 <FieldLabel htmlFor="username">Username</FieldLabel>
-                <Input id="username" type="text" required />
+                <Input id="username" type="text" required onChange={(e) => {
+                  setUsername(e.target.value)
+                }} />
               </Field>
               <Field>
                 <div className="flex items-center">
@@ -46,7 +91,9 @@ export function LoginForm() {
                     Forgot your password?
                   </a>
                 </div>
-                <Input id="password" type="password" required />
+                <Input id="password" type="password" required onChange={(e) => {
+                  setPassword(e.target.value)
+                }} />
               </Field>
               <Field>
                 <Button type="submit">Login</Button>
@@ -59,5 +106,5 @@ export function LoginForm() {
         </CardContent>
       </Card>
     </div>
-  );
+  )
 }
