@@ -5,6 +5,7 @@ export function getToken() {
 }
 
 export function decodeToken(token) {
+  console.log("Token: ", token);
   try {
     const decodedToken = jwtDecode(token);
     return {

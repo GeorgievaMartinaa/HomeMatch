@@ -1,5 +1,5 @@
 import { useContext } from 'react';
-import { AuthContext } from '@/context/authContext.tsx';
+import { AuthContext } from './context/authContext.jsx';
 import { Navigate, Outlet } from 'react-router';
 
 export function ProtectedRoute() {

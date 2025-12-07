@@ -1,6 +1,8 @@
 package com.app.project.homematch.exceptions;
 
+import com.app.project.homematch.entity.ApiError;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.web.ErrorResponse;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -37,5 +39,25 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(UserNotFoundException.class)
     public ErrorResponse handleUserNotFoundException(UserNotFoundException ex) {
         return ErrorResponse.create(ex, HttpStatus.BAD_REQUEST, ex.getMessage());
+    }
+
+    @ExceptionHandler(UsernameAlreadyExistsException.class)
+    public ResponseEntity<ApiError> handleUsernameAlreadyExistsException(UsernameAlreadyExistsException ex) {
+        ApiError error = ApiError.builder()
+                .httpStatus(HttpStatus.BAD_REQUEST)
+                .detail(ex.getMessage())
+                .customErrorCode("BAD_USERNAME")
+                .build();
+        return new ResponseEntity<>(error, error.getHttpStatus());
+    }
+
+    @ExceptionHandler(EmailAlreadyExistException.class)
+    public ResponseEntity<ApiError> handleEmailAlreadyExistException(EmailAlreadyExistException ex) {
+        ApiError error = ApiError.builder()
+                .httpStatus(HttpStatus.BAD_REQUEST)
+                .detail(ex.getMessage())
+                .customErrorCode("BAD_EMAIL")
+                .build();
+        return new ResponseEntity<>(error, error.getHttpStatus());
     }
 }
