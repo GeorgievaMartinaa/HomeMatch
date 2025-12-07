@@ -47,14 +47,11 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         user.setId(UserId.toUserId(TsidGenerator.getInstance().generateNewTsid()));
         user.setFirstName(request.getFirstName());
         user.setLastName(request.getLastName());
-//        user.setAboutMe(request.getAbout());
         user.setUsername(request.getUsername());
         user.setPassword(passwordEncoder.encode(request.getPassword()));
         user.setContact(ContactInfo.builder()
                 .email(request.getEmail())
-//                .phoneNumber(request.getPhoneNumber())
                 .build());
-//        user.setBirthDate(BirthDate.builder().birthDate(request.getBirthDate()).build());
         user.setRole(Role.User);
         user.setVerified(false);
 
