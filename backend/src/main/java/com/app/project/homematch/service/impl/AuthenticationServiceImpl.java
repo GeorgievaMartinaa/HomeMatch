@@ -3,7 +3,9 @@ package com.app.project.homematch.service.impl;
 import com.app.project.homematch.config.security.JwtService;
 import com.app.project.homematch.entity.Role;
 import com.app.project.homematch.entity.User;
+import com.app.project.homematch.exceptions.BadCredentialsException;
 import com.app.project.homematch.exceptions.EmailAlreadyExistException;
+import com.app.project.homematch.exceptions.UserNotFoundException;
 import com.app.project.homematch.exceptions.UserNotVerifiedException;
 import com.app.project.homematch.exceptions.UsernameAlreadyExistsException;
 import com.app.project.homematch.repository.UserRepository;
@@ -17,7 +19,7 @@ import com.app.project.homematch.web.requests.RegisterRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -77,7 +79,11 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         if (!user.isVerified())
             throw new UserNotVerifiedException();
 
-        authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(request.getUsername(), request.getPassword()));
+        try{
+            authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(request.getUsername(), request.getPassword()));
+        }catch (AuthenticationException e){
+            throw new BadCredentialsException();
+        }
 
         return jwtService.generateToken(user);
     }
@@ -109,7 +115,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     }
 
     private User getUser(String username){
-        return repository.findByUsername(username).orElseThrow(() -> new UsernameNotFoundException(username));
+        return repository.findByUsername(username).orElseThrow(() -> new UserNotFoundException(username));
 
     }
 }

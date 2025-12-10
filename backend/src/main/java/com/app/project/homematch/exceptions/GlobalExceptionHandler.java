@@ -3,7 +3,6 @@ package com.app.project.homematch.exceptions;
 import com.app.project.homematch.entity.ApiError;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.web.ErrorResponse;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -12,8 +11,13 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 public class GlobalExceptionHandler {
 
     @ExceptionHandler(BadCredentialsException.class)
-    public ErrorResponse handleBadCredentialsException(BadCredentialsException ex) {
-        return ErrorResponse.create(ex, HttpStatus.BAD_REQUEST, ex.getMessage());
+    public ResponseEntity<ApiError> handleBadCredentialsException(BadCredentialsException ex) {
+        ApiError error = ApiError.builder()
+                .httpStatus(HttpStatus.BAD_REQUEST)
+                .customErrorCode("BAD_CREDENTIALS")
+                .detail(ex.getMessage())
+                .build();
+        return new ResponseEntity<>(error, error.getHttpStatus());
     }
 
     @ExceptionHandler(PostNotFoundException.class)
@@ -27,8 +31,14 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(UserNotVerifiedException.class)
-    public ErrorResponse handleUserNotVerifiedException(UserNotVerifiedException ex) {
-        return ErrorResponse.create(ex, HttpStatus.BAD_REQUEST, ex.getMessage());
+    public ResponseEntity<ApiError> handleUserNotVerifiedException(UserNotVerifiedException ex) {
+        ApiError error = ApiError.builder()
+                .httpStatus(HttpStatus.BAD_REQUEST)
+                .customErrorCode("USER_NOT_VERIFIED")
+                .detail(ex.getMessage())
+                .build();
+
+        return new ResponseEntity<>(error, error.getHttpStatus());
     }
 
     @ExceptionHandler(InvalidVerificationTokenException.class)
@@ -37,9 +47,14 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(UserNotFoundException.class)
-    public ErrorResponse handleUserNotFoundException(UserNotFoundException ex) {
-        return ErrorResponse.create(ex, HttpStatus.BAD_REQUEST, ex.getMessage());
-    }
+    public ResponseEntity<ApiError> handleUserNotFoundException(UserNotFoundException ex) {
+        ApiError error = ApiError.builder()
+                .httpStatus(HttpStatus.BAD_REQUEST)
+                .customErrorCode("USER_NOT_FOUND")
+                .detail(ex.getMessage())
+                .build();
+
+        return new ResponseEntity<>(error, error.getHttpStatus());    }
 
     @ExceptionHandler(UsernameAlreadyExistsException.class)
     public ResponseEntity<ApiError> handleUsernameAlreadyExistsException(UsernameAlreadyExistsException ex) {

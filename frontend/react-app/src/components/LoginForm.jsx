@@ -23,6 +23,8 @@ export function LoginForm() {
     const [username, setUsername] = useState('')
     const [password, setPassword] = useState('')
     const [error, setError] = useState('');
+    const [errorCode, setErrorCode] = useState('');
+    const [info, setInfo] = useState('');
 
     const {login, isAuthenticated} = useContext(AuthContext)
     const navigate = useNavigate()
@@ -42,16 +44,49 @@ export function LoginForm() {
         })
 
         if (!response.ok) {
-            setError('Incorrect username or password');
-            setUsername("");
-            setPassword("");
+            setInfo('');
+            console.log(response)
+            const errorData = await response.json();
+            console.log(errorData.detail)
+
+            setError(errorData.detail);
+            if (errorData.customErrorCode === "USER_NOT_VERIFIED") {
+                setErrorCode(errorData.customErrorCode)
+                setPassword('');
+                return;
+            }
+            setUsername('');
+            setPassword('');
             return;
         }
 
+        setError('');
+        setErrorCode('');
+        setInfo('');
         const token = await response.text()
 
         login(token)
         navigate("/")
+    }
+
+    async function handleResendVerification(event) {
+        event.preventDefault();
+        const params = new URLSearchParams();
+        params.append("username", username);
+
+        const response = await fetch(`http://localhost:8080/api/v1/auth/resend-verification?${params}`, {
+            method: "GET",
+            headers: {"Content-Type": "application/json"},
+        })
+        if (!response.ok) {
+            const error2 = await response.json()
+            console.log(error2)
+            return;
+        }
+
+        setErrorCode('');
+        setError('');
+        setInfo('Verification link is sent to your email')
     }
 
     return (
@@ -85,6 +120,10 @@ export function LoginForm() {
                                     setPassword(e.target.value)
                                 }}/>
                                 <FieldError>{error}</FieldError>
+                                {errorCode === "USER_NOT_VERIFIED" &&
+                                <Button variant="link" className='hover:underline' onClick={handleResendVerification}>Resend
+                                    verification link</Button>}
+                                {info && <FieldDescription className='color-primary'> {info} </FieldDescription>}
                             </Field>
                             <Field>
                                 <Button type="submit">Login</Button>
