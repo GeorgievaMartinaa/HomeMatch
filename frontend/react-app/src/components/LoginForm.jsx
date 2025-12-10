@@ -45,9 +45,7 @@ export function LoginForm() {
 
         if (!response.ok) {
             setInfo('');
-            console.log(response)
             const errorData = await response.json();
-            console.log(errorData.detail)
 
             setError(errorData.detail);
             if (errorData.customErrorCode === "USER_NOT_VERIFIED") {
@@ -57,6 +55,7 @@ export function LoginForm() {
             }
             setUsername('');
             setPassword('');
+            setErrorCode('');
             return;
         }
 
@@ -79,8 +78,9 @@ export function LoginForm() {
             headers: {"Content-Type": "application/json"},
         })
         if (!response.ok) {
-            const error2 = await response.json()
-            console.log(error2)
+            const errorData = await response.json();
+            setError(errorData.detail)
+            setErrorCode('');
             return;
         }
 

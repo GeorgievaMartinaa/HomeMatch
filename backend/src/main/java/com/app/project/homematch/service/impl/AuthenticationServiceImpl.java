@@ -22,6 +22,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
@@ -34,6 +35,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     private final EmailService emailService;
 
     @Override
+    @Transactional
     public void register(RegisterRequest request) {
 
         if(usernameExist(request.getUsername())){
@@ -73,6 +75,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public String login(AuthenticationRequest request) {
         User user = getUser(request.getUsername());
 
@@ -89,6 +92,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     }
 
     @Override
+    @Transactional
     public String verifyAccount(String token) {
 
         String username = jwtService.verifyTokenAndExtractUsername(token);
@@ -106,6 +110,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public void resendVerification(String username) {
         String token = jwtService.generateVerificationToken(username);
 
