@@ -27,6 +27,7 @@ export function SignupForm() {
     const [usernameError, setUsernameError] = useState('')
     const [emailError, setEmailError] = useState('')
     const [isLoading, setIsLoading] = useState(false)
+    const [errors, setErrors] = useState([])
 
 
     const {isAuthenticated} = useContext(AuthContext)
@@ -42,7 +43,9 @@ export function SignupForm() {
         event.preventDefault();
         setEmailError('');
         setUsernameError('');
+        setErrors([]);
         setIsLoading(true);
+
         const response = await fetch("http://localhost:8080/api/v1/auth/register", {
             method: "POST",
             headers: {"Content-Type": "application/json"},
@@ -59,6 +62,8 @@ export function SignupForm() {
             }else if(errorData.customErrorCode === "BAD_EMAIL"){
                 setEmailError(errorData.detail);
                 setEmail('');
+            } else if(errorData.errors) {
+                setErrors(errorData.errors)
             }
             setPassword('');
             setIsLoading(false);
@@ -120,15 +125,20 @@ export function SignupForm() {
                                     setUsername(e.target.value)
                                 }}/>
                                 <FieldError>{usernameError}</FieldError>
+                                <FieldError>{errors?.username?.map((msg, i) => (
+                                    <div key={i}>{msg}</div>
+                                ))}</FieldError>
                             </Field>
                             <Field>
                                 <FieldLabel htmlFor="password">Password</FieldLabel>
                                 <Input id="password" type="password" value={password} required onChange={(e) => {
                                     setPassword(e.target.value)
                                 }}/>
-                                <FieldDescription>
-                                    Must be at least 8 characters long.
-                                </FieldDescription>
+                                <FieldError>
+                                    {errors?.password?.map((msg, i) => (
+                                        <div key={i}>{msg}</div>
+                                    ))}
+                                </FieldError>
                             </Field>
                             <FieldGroup>
                                 <Field>

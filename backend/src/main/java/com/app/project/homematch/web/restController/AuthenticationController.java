@@ -3,6 +3,7 @@ package com.app.project.homematch.web.restController;
 import com.app.project.homematch.service.AuthenticationService;
 import com.app.project.homematch.web.requests.AuthenticationRequest;
 import com.app.project.homematch.web.requests.RegisterRequest;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -23,7 +24,7 @@ public class AuthenticationController {
     private final AuthenticationService authService;
 
     @PostMapping("/register")
-    public ResponseEntity<Void> register(@RequestBody RegisterRequest request) {
+    public ResponseEntity<Void> register(@Valid @RequestBody RegisterRequest request) {
         authService.register(request);
         return new ResponseEntity<>(HttpStatus.OK);
     }

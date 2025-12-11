@@ -4,11 +4,32 @@ import com.app.project.homematch.entity.ApiError;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.ErrorResponse;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 @RestControllerAdvice
 public class GlobalExceptionHandler {
+
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public ResponseEntity<Map<String,Map<String, List<String>>>> handleValidationErrors(MethodArgumentNotValidException ex) {
+        Map<String, List<String>> errors = new HashMap<>();
+
+        ex.getBindingResult().getFieldErrors().forEach(fieldError -> {
+            String field = fieldError.getField();
+            String message = fieldError.getDefaultMessage();
+
+            errors.computeIfAbsent(field, key -> new ArrayList<>()).add(message);
+        });
+
+        return new ResponseEntity<>(Map.of("errors", errors), HttpStatus.BAD_REQUEST);
+    }
+
 
     @ExceptionHandler(BadCredentialsException.class)
     public ResponseEntity<ApiError> handleBadCredentialsException(BadCredentialsException ex) {
