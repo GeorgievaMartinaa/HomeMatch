@@ -15,7 +15,10 @@ public class RegisterRequest {
     @Pattern(regexp = "^[a-zA-Z0-9]+$", message = "Username can only contains letters and numbers")
     private String username;
     @Size(min = 8, message = "Password should be at least 8 characters")
-    @Pattern(regexp = "^(?=.*[0-9])(?=.*[!@#$%^&+=])(?=\\\\S+$)(?=.*[A-Z])$", message = "Password should contains at least one capital letter, one number and one special character")
+    @Pattern(
+            regexp = "^(?=.*[0-9])(?=.*[!@#$%^&+=])(?=\\S+$)(?=.*[A-Z]).*$",
+            message = "Password must contain a capital letter, a number, and a special character"
+    )
     private String password;
     private String email;
 }
