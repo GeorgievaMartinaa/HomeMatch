@@ -10,6 +10,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -21,6 +22,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/api/v1/post")
 @RequiredArgsConstructor
+@CrossOrigin(origins = "http://localhost:5173")
 public class PostController {
 
     private final PostService postService;
@@ -44,7 +46,7 @@ public class PostController {
 
     @GetMapping
     public ResponseEntity<Page<PostResponse>> allPosts(@RequestParam(defaultValue = "0") Integer pageNumber,
-                                                       @RequestParam(defaultValue = "5") Integer pageSize) {
+                                                       @RequestParam(defaultValue = "10") Integer pageSize) {
         Page<PostDTO> postDTOPage = postService.getAllPosts(pageSize, pageNumber);
         return new ResponseEntity(postDTOPage.map(PostMapper::toPostResponse), HttpStatus.OK);
     }
