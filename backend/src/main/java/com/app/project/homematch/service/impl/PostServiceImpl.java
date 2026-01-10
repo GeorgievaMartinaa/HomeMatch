@@ -4,13 +4,12 @@ import com.app.project.homematch.entity.DTO.PostDTO;
 import com.app.project.homematch.entity.DTO.UserDTO;
 import com.app.project.homematch.entity.Post;
 import com.app.project.homematch.exceptions.PostNotFoundException;
+import com.app.project.homematch.repository.PostProjection;
 import com.app.project.homematch.repository.PostRepository;
 import com.app.project.homematch.service.PostService;
 import com.app.project.homematch.service.UserService;
 import com.app.project.homematch.service.externalAPI.OpenAIService;
 import com.app.project.homematch.service.mapper.PostMapper;
-import com.app.project.homematch.valueObject.Currency;
-import com.app.project.homematch.valueObject.PostId;
 import com.app.project.homematch.web.requests.FormPostRequest;
 import com.app.project.homematch.web.responses.OpenAIResponse;
 import lombok.RequiredArgsConstructor;
@@ -42,7 +41,7 @@ public class PostServiceImpl implements PostService {
                 .description(postRequest.getDescription())
                 .location(aiResponse.getLocation())
                 .price(BigDecimal.valueOf(aiResponse.getPrice()))
-                .currency(Currency.valueOf(aiResponse.getCurrency()))
+                .currency(aiResponse.getCurrency())
                 .creatorId(userDto.getId())
                 .build();
 
@@ -75,7 +74,7 @@ public class PostServiceImpl implements PostService {
 
     @Override
     public PostDTO getById(Long postId) {
-        Post post = postRepository.findById(PostId.toPostId(postId)).orElseThrow(() -> new PostNotFoundException(postId));
+        PostProjection post = postRepository.getById(postId).orElseThrow(()-> new PostNotFoundException(postId));
         return PostMapper.toDTO(post);
     }
 

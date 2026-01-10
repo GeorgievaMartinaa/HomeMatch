@@ -1,6 +1,7 @@
 package com.app.project.homematch.entity;
 
 import com.app.project.homematch.entity.DTO.PostDTO;
+import com.app.project.homematch.valueObject.Currency;
 import com.app.project.homematch.valueObject.Money;
 import com.app.project.homematch.valueObject.PostId;
 import jakarta.persistence.AttributeOverride;
@@ -66,7 +67,7 @@ public class Post {
                 .fetchedFrom(postDTO.getExternalApi())
                 .location(postDTO.getLocation())
                 .originalPostURL(postDTO.getOriginalPostUrl())
-                .price(new Money(postDTO.getPrice(), postDTO.getCurrency()))
+                .price(new Money(postDTO.getPrice(), Currency.valueOf(postDTO.getCurrency())))
                 .build();
     }
 }

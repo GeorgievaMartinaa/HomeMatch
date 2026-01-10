@@ -1,6 +1,5 @@
 package com.app.project.homematch.entity.DTO;
 
-import com.app.project.homematch.valueObject.Currency;
 import lombok.Builder;
 import lombok.Data;
 
@@ -15,8 +14,11 @@ public class PostDTO {
     private String description;
     private String location;
     private BigDecimal price;
-    private Currency currency;
+    private String currency;
     private Long creatorId;
+    private String creatorName;
+    private String creatorPhoneNumber;
+    private String creatorEmail;
     private String externalApi;
     private String originalPostUrl;
     private LocalDateTime lastTimeUpdated;

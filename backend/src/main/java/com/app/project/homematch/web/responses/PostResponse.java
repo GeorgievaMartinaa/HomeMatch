@@ -9,14 +9,17 @@ import java.time.LocalDateTime;
 @Builder
 @Getter
 public class PostResponse {
-    Long id;
+    String id;
     String title;
     String description;
     LocalDateTime lastTimeUpdated;
     String location;
     BigDecimal priceAmount;
     String priceCurrency;
-    Long creatorId;
+    String creatorId;
+    String creatorName;
+    String creatorEmail;
+    String creatorPhoneNumber;
     String fetchedFrom;
     String originalPostUrl;
 }

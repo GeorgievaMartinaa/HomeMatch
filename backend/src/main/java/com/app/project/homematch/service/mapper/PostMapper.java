@@ -1,11 +1,12 @@
 package com.app.project.homematch.service.mapper;
 
+import com.app.project.homematch.entity.DTO.FetchedPostDTO;
+import com.app.project.homematch.entity.DTO.PostDTO;
 import com.app.project.homematch.entity.Post;
+import com.app.project.homematch.repository.PostProjection;
 import com.app.project.homematch.valueObject.Currency;
 import com.app.project.homematch.valueObject.Money;
-import com.app.project.homematch.entity.DTO.FetchedPostDTO;
 import com.app.project.homematch.web.responses.OpenAIResponse;
-import com.app.project.homematch.entity.DTO.PostDTO;
 import com.app.project.homematch.web.responses.PostResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
@@ -27,8 +28,34 @@ public class PostMapper {
                 .fetchedFrom(postDTO.getExternalApi())
                 .location(postDTO.getLocation())
                 .originalPostURL(postDTO.getOriginalPostUrl())
-                .price(new Money(postDTO.getPrice(), postDTO.getCurrency()))
+                .price(new Money(postDTO.getPrice(), Currency.valueOf(postDTO.getCurrency())))
                 .build();
+    }
+
+    public static PostDTO toDTO(PostProjection postProjection) {
+        return PostDTO.builder()
+                .id(postProjection.getId())
+                .title(postProjection.getTitle())
+                .description(postProjection.getDescription())
+                .location(postProjection.getLocation())
+                .creatorId(postProjection.getCreatorId())
+                .creatorName(creatorFullName(postProjection.getCreatorFirstName(), postProjection.getCreatorLastName()))
+                .creatorEmail(postProjection.getCreatorEmail())
+                .creatorPhoneNumber(postProjection.getCreatorPhoneNumber())
+                .price(postProjection.getPriceAmount())
+                .currency(postProjection.getPriceCurrency())
+                .externalApi(postProjection.getFetchedFrom())
+                .originalPostUrl(postProjection.getOriginalPostUrl())
+                .lastTimeUpdated(LocalDateTime.ofInstant(postProjection.getLastTimeUpdated(), ZoneId.of("Europe/Skopje")))
+                .build();
+    }
+
+    private static String creatorFullName(String creatorFirstName, String creatorLastName) {
+
+        if (creatorFirstName != null && creatorLastName != null)
+            return creatorFirstName + " " + creatorLastName;
+
+        return null;
     }
 
     public static PostDTO toDTO(Post post) {
@@ -39,7 +66,7 @@ public class PostMapper {
                 .location(post.getLocation())
                 .creatorId(post.getCreatorId())
                 .price(post.getPrice().getAmount())
-                .currency(post.getPrice().getCurrency())
+                .currency(post.getPrice().getCurrency().name())
                 .externalApi(post.getFetchedFrom())
                 .originalPostUrl(post.getOriginalPostURL())
                 .lastTimeUpdated(LocalDateTime.ofInstant(post.getUpdatedDate(), ZoneId.of("Europe/Skopje")))
@@ -54,20 +81,23 @@ public class PostMapper {
                 .originalPostUrl(fetchedPostDTO.getUrlLink())
                 .location(aiResponse.getLocation())
                 .price(BigDecimal.valueOf(aiResponse.getPrice()))
-                .currency(Currency.valueOf(aiResponse.getCurrency()))
+                .currency(aiResponse.getCurrency())
                 .build();
     }
 
     public static PostResponse toPostResponse(PostDTO postDTO) {
         return PostResponse.builder()
-                .id(postDTO.getId())
+                .id(String.valueOf(postDTO.getId()))
                 .title(postDTO.getTitle())
                 .description(postDTO.getDescription())
                 .lastTimeUpdated(postDTO.getLastTimeUpdated())
                 .priceAmount(postDTO.getPrice())
-                .priceCurrency(postDTO.getCurrency().name())
+                .priceCurrency(postDTO.getCurrency())
                 .location(postDTO.getLocation())
-                .creatorId(postDTO.getCreatorId())
+                .creatorId(String.valueOf(postDTO.getCreatorId()))
+                .creatorName(postDTO.getCreatorName())
+                .creatorEmail(postDTO.getCreatorEmail())
+                .creatorPhoneNumber(postDTO.getCreatorPhoneNumber())
                 .fetchedFrom(postDTO.getExternalApi())
                 .originalPostUrl(postDTO.getOriginalPostUrl())
                 .build();
