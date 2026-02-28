@@ -5,8 +5,8 @@ import {User} from "lucide-react";
 export default function Header() {
     return (
 
-        <div className='flex justify-between'>
-            <div>
+        <div className='flex justify-between p-3 bg-card/80 shadow-md shadow-white/50'>
+            <div className='self-center'>
                 <Link to={'/'}>HomeMatch</Link>
             </div>
             <div>
