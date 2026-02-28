@@ -12,7 +12,7 @@ public interface PostService {
 
     OpenAIResponse analyzePost(String text);
 
-    Page<PostDTO> getAllPosts(int pageSize, int pageNumber);
+    Page<PostDTO> getAllPosts(int pageSize, int pageNumber, String sortDirection, String sortBy, String location);
 
     PostDTO getById(Long postId);
 }

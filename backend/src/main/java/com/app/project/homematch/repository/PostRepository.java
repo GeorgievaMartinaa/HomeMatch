@@ -2,6 +2,8 @@ package com.app.project.homematch.repository;
 
 import com.app.project.homematch.entity.Post;
 import com.app.project.homematch.valueObject.PostId;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -20,4 +22,6 @@ public interface PostRepository extends JpaRepository<Post, PostId> {
             """,
             nativeQuery = true)
     Optional<PostProjection> getById(@Param(value = "id")Long id);
+
+    Page<Post> findAllByLocationContains(String location, Pageable pageable);
 }
