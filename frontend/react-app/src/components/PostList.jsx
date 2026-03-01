@@ -101,7 +101,7 @@ export default function PostList() {
 
 
     return (
-        <div className='flex flex-col gap-3'>
+        <div className='flex flex-col gap-3 px-[2rem]'>
             <div className='w-1/4 ml-1 flex gap-5'>
                 <div className='w-2/3'>
                     <InputGroup>

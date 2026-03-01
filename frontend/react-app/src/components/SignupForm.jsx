@@ -90,8 +90,8 @@ export function SignupForm() {
                 </CardHeader>
                 <CardContent>
                     <form onSubmit={handleRegister}>
-                        <FieldGroup>
-                            <Field className="grid grid-cols-2 gap-4">
+                        <FieldGroup className='flex flex-col gap-4'>
+                            <Field className="grid grid-cols-2 gap-3">
                                 <Field>
                                     <FieldLabel htmlFor="name">First Name</FieldLabel>
                                     <Input id="name" type="text" placeholder="John" value={firstName} required
