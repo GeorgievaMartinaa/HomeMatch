@@ -1,7 +1,7 @@
 import {Item, ItemActions, ItemContent, ItemDescription, ItemTitle} from "@/components/ui/item";
 import {Separator} from "@/components/ui/separator";
 import {Button} from "@/components/ui/button";
-import {X} from "lucide-react";
+import {Mail, Phone, User, X} from "lucide-react";
 
 export default function PostDetails({post, onClose}) {
     return (
@@ -10,7 +10,8 @@ export default function PostDetails({post, onClose}) {
                 <div className='flex justify-between w-full'>
                     <ItemTitle className='text-lg'>{post.title}</ItemTitle>
                     <ItemActions>
-                        <Button variant="ghost" size="icon" className="rounded-full hover:cursor-pointer" onClick={onClose}>
+                        <Button variant="ghost" size="icon" className="rounded-full hover:cursor-pointer"
+                                onClick={onClose}>
                             <X/>
                         </Button>
                     </ItemActions>
@@ -24,10 +25,19 @@ export default function PostDetails({post, onClose}) {
                 <Separator/>
                 <ItemContent className='w-full text-left'>
                     <ItemTitle>Contact details:</ItemTitle>
-                    <div className='pl-2'>
-                        <ItemDescription>{post.creatorName}</ItemDescription>
-                        <ItemDescription>{post.creatorEmail}</ItemDescription>
-                        <ItemDescription>{post.creatorPhoneNumber}</ItemDescription>
+                    <div className='flex flex-col gap-2 pl-2 pt-2'>
+                        <div className='flex items-center gap-2'>
+                            <User size='16'/>
+                            <ItemDescription>{post.creatorName}</ItemDescription>
+                        </div>
+                        <div className='flex items-center gap-2'>
+                            <Mail size='16' />
+                            <ItemDescription>{post.creatorEmail}</ItemDescription>
+                        </div>
+                        <div className='flex items-center gap-2'>
+                            <Phone size='16'/>
+                            <ItemDescription>{post.creatorPhoneNumber}</ItemDescription>
+                        </div>
                     </div>
                 </ItemContent>
 
