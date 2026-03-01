@@ -1,0 +1,1 @@
+ALTER TABLE post ADD COLUMN price_mkd int not null;

@@ -123,8 +123,8 @@ export default function PostList() {
                                 <SelectValue placeholder="Sort by..."/>
                             </SelectTrigger>
                             <SelectContent className=' bg-card'>
-                                <SelectItem value="price ASC">Price <ArrowUp/> </SelectItem>
-                                <SelectItem value="price DESC">Price <ArrowDown/> </SelectItem>
+                                <SelectItem value="priceMKD ASC">Price <ArrowUp/> </SelectItem>
+                                <SelectItem value="priceMKD DESC">Price <ArrowDown/> </SelectItem>
                                 <SelectItem value="createdDate ASC">Date <ArrowUp/></SelectItem>
                                 <SelectItem value="createdDate DESC">Date <ArrowDown/></SelectItem>
                             </SelectContent>
