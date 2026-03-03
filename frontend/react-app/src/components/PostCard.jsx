@@ -48,7 +48,7 @@ export function PostCard({post, selectElement}) {
         }
     }
     return (
-        <Card className="w-full sm:w-[calc(50%-0.5rem)] md:w-[calc(33.333%-0.67rem)] lg:w-[calc(25%-0.75rem)] gap-2 hover:cursor-pointer"
+        <Card className="w-full sm:w-[calc(50%-0.5rem)] md:w-[calc(33.333%-0.67rem)] lg:w-[calc(25%-0.75rem)] gap-3 hover:cursor-pointer"
               onClick={postDetails}>
             <CardHeader className='text-start gap-1'>
                 <CardTitle>{post.title}</CardTitle>

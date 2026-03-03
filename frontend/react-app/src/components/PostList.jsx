@@ -6,7 +6,7 @@ import {Field} from "@/components/ui/field";
 import {Select, SelectContent, SelectItem, SelectTrigger, SelectValue} from "@/components/ui/select";
 import {ArrowDown, ArrowUp, X} from "lucide-react";
 import {Spinner} from "@/components/ui/spinner";
-import {InputGroup, InputGroupAddon, InputGroupButton, InputGroupInput} from "@/components/ui/input-group";
+import {InputGroup, InputGroupAddon, InputGroupInput} from "@/components/ui/input-group";
 
 export default function PostList() {
     const [posts, setPosts] = useState([])
@@ -108,7 +108,7 @@ export default function PostList() {
                         <InputGroupInput type="text" placeholder="Filter by location..." value={filterText}
                                          onChange={handleFilterPosts}/>
                         {filterText && (
-                            <InputGroupAddon>
+                            <InputGroupAddon align="inline-end">
                                 <X className='hover:text-accent cursor-pointer' onClick={handleRemoveFilterText}/>
                             </InputGroupAddon>
                         )}
@@ -122,7 +122,7 @@ export default function PostList() {
                             <SelectTrigger>
                                 <SelectValue placeholder="Sort by..."/>
                             </SelectTrigger>
-                            <SelectContent className=' bg-card'>
+                            <SelectContent position="popper" className=' bg-card'>
                                 <SelectItem value="priceMKD ASC">Price <ArrowUp/> </SelectItem>
                                 <SelectItem value="priceMKD DESC">Price <ArrowDown/> </SelectItem>
                                 <SelectItem value="createdDate ASC">Date <ArrowUp/></SelectItem>
@@ -130,7 +130,6 @@ export default function PostList() {
                             </SelectContent>
                         </Select>
                     </Field>
-                    {/*<X className=' hover:text-accent cursor-pointer' onClick={handleRemoveSortDetails}/>*/}
                 </div>
 
             </div>
@@ -139,7 +138,7 @@ export default function PostList() {
             </div>) : (
                 <>
                     <div className='flex gap-2'>
-                        <div className={`flex flex-wrap gap-2 ${selectedElement ? 'w-full sm:w-2/3' : 'w-full'}`}>
+                        <div className={`flex flex-wrap gap-2 ${selectedElement ? 'w-full sm:w-2/3 h-min' : 'w-full'}`}>
                             {posts.map(post => {
                                 return <PostCard post={post} key={post.id} selectElement={setSelectedElement}/>
                             })}
