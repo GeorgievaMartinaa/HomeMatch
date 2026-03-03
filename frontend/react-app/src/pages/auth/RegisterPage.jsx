@@ -1,10 +1,14 @@
 import {SignupForm} from "@/components/SignupForm";
+import Header from "@/components/Header";
 
-export default function RegisterPage(){
+export default function RegisterPage() {
     return (
-        <div className="flex min-h-svh w-full items-center justify-center p-6 md:p-10">
-            <div className="w-full max-w-sm">
-                <SignupForm />
+        <div className='h-svh overflow-hidden'>
+            <Header/>
+            <div className="flex h-[90%] w-full items-center justify-center">
+                <div className="w-full max-w-sm">
+                    <SignupForm/>
+                </div>
             </div>
         </div>
     )

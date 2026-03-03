@@ -15,6 +15,7 @@ import com.app.project.homematch.web.responses.OpenAIResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -65,9 +66,10 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
-    public Page<PostDTO> getAllPosts(int pageSize, int pageNumber) {
-        PageRequest pageRequest = PageRequest.of(pageNumber, pageSize);
-        Page<Post> posts = postRepository.findAll(pageRequest);
+    public Page<PostDTO> getAllPosts(int pageSize, int pageNumber, String sortDirection, String sortBy, String location ) {
+        PageRequest pageRequest = PageRequest.of(pageNumber, pageSize, Sort.by(Sort.Direction.valueOf(sortDirection), sortBy));
+
+        Page<Post> posts = postRepository.findAllByLocationContains(location,pageRequest);
 
         return posts.map(PostMapper::toDTO);
     }

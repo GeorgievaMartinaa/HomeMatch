@@ -1,6 +1,7 @@
 package com.app.project.homematch.web.restController;
 
 import com.app.project.homematch.entity.DTO.PostDTO;
+import com.app.project.homematch.entity.SortDirection;
 import com.app.project.homematch.service.PostService;
 import com.app.project.homematch.service.mapper.PostMapper;
 import com.app.project.homematch.web.requests.FormPostRequest;
@@ -46,8 +47,11 @@ public class PostController {
 
     @GetMapping
     public ResponseEntity<Page<PostResponse>> allPosts(@RequestParam(defaultValue = "0") Integer pageNumber,
-                                                       @RequestParam(defaultValue = "10") Integer pageSize) {
-        Page<PostDTO> postDTOPage = postService.getAllPosts(pageSize, pageNumber);
+                                                       @RequestParam(defaultValue = "10") Integer pageSize,
+                                                       @RequestParam(defaultValue = "DESC")SortDirection direction,
+                                                       @RequestParam(defaultValue = "createdDate") String sortBy,
+                                                       @RequestParam(defaultValue = "") String location) {
+        Page<PostDTO> postDTOPage = postService.getAllPosts(pageSize, pageNumber, direction.name(), sortBy, location);
         return new ResponseEntity(postDTOPage.map(PostMapper::toPostResponse), HttpStatus.OK);
     }
 

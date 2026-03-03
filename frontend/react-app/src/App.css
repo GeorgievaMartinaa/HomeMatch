@@ -2,9 +2,8 @@
 @import "tw-animate-css";
 
 #root {
-  max-width: 1280px;
+  max-width: 2048px;
   margin: 0 auto;
-  padding: 2rem;
   text-align: center;
 }
 
@@ -65,12 +64,12 @@
   --card-foreground: #fafafa;
   --primary: #059669;
   --primary-foreground: #ccfae7;
-  --secondary: #2dd4bf;
-  --secondary-foreground: #115e59;
+  --secondary: #2d81d4;
+  --secondary-foreground: #11405e;
   --muted: #a1a1aa;
   --muted-foreground: #c2bebd;
-  --accent: #f97316;
-  --accent-foreground: #c2410c;
+  --accent: #ff6d0c;
+  --accent-foreground: #ffece0;
   --destructive: #b91c1c;
   --border: #0c0a09;
   --input: #817572;

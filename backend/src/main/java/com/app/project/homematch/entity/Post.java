@@ -20,6 +20,7 @@ import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
+import java.math.BigDecimal;
 import java.time.Instant;
 
 @Entity
@@ -57,6 +58,10 @@ public class Post {
     private String fetchedFrom;
     @Column(name = "creator_id")
     private Long creatorId;
+    @Column(name = "price_mkd")
+    private int priceMKD;
+
+    private static BigDecimal EUR_TO_MKD_CURSE = BigDecimal.valueOf(61.5);
 
     public static Post create(PostDTO postDTO){
         return Post.builder()
@@ -68,6 +73,16 @@ public class Post {
                 .location(postDTO.getLocation())
                 .originalPostURL(postDTO.getOriginalPostUrl())
                 .price(new Money(postDTO.getPrice(), Currency.valueOf(postDTO.getCurrency())))
+                .priceMKD(convertPriceToMKD(postDTO.getPrice(), postDTO.getCurrency()))
                 .build();
+    }
+
+    private static int convertPriceToMKD(BigDecimal price, String currency){
+        if(Currency.EUR.name().equals(currency)){
+            return price.multiply(EUR_TO_MKD_CURSE)
+                    .setScale(0)
+                    .intValue();
+        }
+        return price.intValue();
     }
 }
