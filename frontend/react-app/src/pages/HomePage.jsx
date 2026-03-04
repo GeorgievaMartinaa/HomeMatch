@@ -3,7 +3,7 @@ import PostList from '../components/PostList.jsx'
 
 export default function HomePage() {
     return (<div className='flex flex-col gap-5'>
-        <Header/>
+        <Header page='home'/>
         <PostList/>
     </div>)
 }

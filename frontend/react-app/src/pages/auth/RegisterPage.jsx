@@ -4,7 +4,7 @@ import Header from "@/components/Header";
 export default function RegisterPage() {
     return (
         <div className='h-svh overflow-hidden'>
-            <Header/>
+            <Header page='register'/>
             <div className="flex h-[90%] w-full items-center justify-center">
                 <div className="w-full max-w-sm">
                     <SignupForm/>
