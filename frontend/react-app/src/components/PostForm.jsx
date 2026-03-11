@@ -54,12 +54,11 @@ const PostForm = () => {
             });
 
             if (!response.ok) {
-                toast.success("Something went wrong. Your post is not submitted", { position: "top-center", style: {backgroundColor: 'red'} })
+                toast.error(await response.text(), { position: "top-center",style: {backgroundColor: 'red'} })
                 return;
             }
 
-            const result = await response.text();
-            toast.success("Your post is successfully submitted", { position: "top-center", style: {backgroundColor: 'green'} })
+            toast.success( await response.text(), { position: "top-center", style: {backgroundColor: 'green'} })
 
         } catch (error) {
             console.error("Error submitting form:", error);

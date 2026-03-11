@@ -30,25 +30,26 @@ public class PostController {
 
     @PostMapping("/create")
     public ResponseEntity<String> createNewPost(@RequestBody FormPostRequest formPostRequest) {
+        String SUCCESS_MESSAGE="Your post is successfully created!";
+        String FAILED_MESSAGE="Oops! This platform is for accommodation rentals. Your post doesn't appear to be related to renting a property.";
 
         String postText = formPostRequest.getTitle() + formPostRequest.getDescription();
 
         OpenAIResponse response = postService.analyzePost(postText);
 
-        if (response.getIsAccommodationPost()) {
-            postService.newPostFromRequest(formPostRequest, response);
-
-            return new ResponseEntity("New post created", HttpStatus.CREATED);
+        if (!response.getIsAccommodationPost()) {
+            return new ResponseEntity(FAILED_MESSAGE, HttpStatus.BAD_REQUEST);
         }
 
-        return new ResponseEntity("This post can't be created", HttpStatus.BAD_REQUEST);
+        postService.newPostFromRequest(formPostRequest, response);
+        return new ResponseEntity(SUCCESS_MESSAGE, HttpStatus.CREATED);
 
     }
 
     @GetMapping
     public ResponseEntity<Page<PostResponse>> allPosts(@RequestParam(defaultValue = "0") Integer pageNumber,
                                                        @RequestParam(defaultValue = "10") Integer pageSize,
-                                                       @RequestParam(defaultValue = "DESC")SortDirection direction,
+                                                       @RequestParam(defaultValue = "DESC") SortDirection direction,
                                                        @RequestParam(defaultValue = "createdDate") String sortBy,
                                                        @RequestParam(defaultValue = "") String location) {
         Page<PostDTO> postDTOPage = postService.getAllPosts(pageSize, pageNumber, direction.name(), sortBy, location);
@@ -56,7 +57,7 @@ public class PostController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<PostResponse> post(@PathVariable Long id){
+    public ResponseEntity<PostResponse> post(@PathVariable Long id) {
         return new ResponseEntity(PostMapper.toPostResponse(postService.getById(id)), HttpStatus.OK);
     }
 }
