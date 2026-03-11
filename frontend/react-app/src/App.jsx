@@ -5,6 +5,7 @@ import {ProtectedRoute} from '@/ProtectedRoute.jsx'
 import RegisterPage from '@/pages/auth/RegisterPage.jsx'
 import RegistrationSuccess from "@/pages/auth/RegistrationSuccess";
 import HomePage from "@/pages/HomePage";
+import CreatePostPage from "@/pages/CreatePostPage";
 
 function App() {
     return (
@@ -15,6 +16,7 @@ function App() {
             <Route path={'login'} element={<LoginPage/>}/>
             <Route path={'register'} element={<RegisterPage/>}/>
             <Route path={'/success_registration'} element={<RegistrationSuccess/>}/>
+            <Route path={'/create_post'} element={<CreatePostPage/>}/>
             <Route path={'/'} element={<HomePage/>}/>
         </Routes>
     )

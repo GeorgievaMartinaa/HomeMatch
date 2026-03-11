@@ -11,12 +11,11 @@ import {useCallback, useContext} from "react";
 import {AuthContext} from "@/context/authContext";
 
 export default function Header({page}) {
-    const {isAuthenticated, logout} = useContext(AuthContext)
+    const {isAuthenticated, logout, userName} = useContext(AuthContext)
 
-    const handleLogOut = useCallback(() =>{
-        console.log("Logout user")
+    const handleLogOut = useCallback(() => {
         logout()
-    },[])
+    }, [])
 
     return (
         <div className='flex justify-between py-3 px-10 bg-card/80 shadow-md shadow-white/50'>
@@ -26,7 +25,9 @@ export default function Header({page}) {
             {page === 'home' && (
                 <div>
                     <div className='flex gap-3'>
-                        <Button className='hover:cursor-pointer'>Create post</Button>
+                        <Button className='hover:cursor-pointer'>
+                            <Link to={'/create_post'}>Create post</Link>
+                        </Button>
 
                         <DropdownMenu>
                             <DropdownMenuTrigger asChild>

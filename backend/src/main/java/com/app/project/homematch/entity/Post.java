@@ -21,6 +21,7 @@ import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.time.Instant;
 
 @Entity
@@ -80,7 +81,7 @@ public class Post {
     private static int convertPriceToMKD(BigDecimal price, String currency){
         if(Currency.EUR.name().equals(currency)){
             return price.multiply(EUR_TO_MKD_CURSE)
-                    .setScale(0)
+                    .setScale(0, RoundingMode.CEILING)
                     .intValue();
         }
         return price.intValue();
