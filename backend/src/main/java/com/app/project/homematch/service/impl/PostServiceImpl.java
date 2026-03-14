@@ -82,5 +82,15 @@ public class PostServiceImpl implements PostService {
         return PostMapper.toDTO(post);
     }
 
+    @Override
+    public Page<PostDTO> getAllPostsByUser(int pageSize, int pageNumber, String username) {
+        PageRequest pageRequest = PageRequest.of(pageNumber, pageSize, Sort.by(Sort.Direction.DESC, "createdDate"));
+        UserDTO userDto = userService.findByUsername(username);
+
+        Page<Post> postsByUser = postRepository.findAllByCreatorId(userDto.getId(), pageRequest);
+
+        return postsByUser.map(PostMapper::toDTO);
+    }
+
 
 }

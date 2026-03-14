@@ -24,4 +24,6 @@ public interface PostRepository extends JpaRepository<Post, PostId> {
     Optional<PostProjection> getById(@Param(value = "id")Long id);
 
     Page<Post> findAllByLocationContains(String location, Pageable pageable);
+
+    Page<Post> findAllByCreatorId(Long creatorId, Pageable pageable);
 }

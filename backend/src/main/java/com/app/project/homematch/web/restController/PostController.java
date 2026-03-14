@@ -11,6 +11,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -30,8 +32,8 @@ public class PostController {
 
     @PostMapping("/create")
     public ResponseEntity<String> createNewPost(@RequestBody FormPostRequest formPostRequest) {
-        String SUCCESS_MESSAGE="Your post is successfully created!";
-        String FAILED_MESSAGE="Oops! This platform is for accommodation rentals. Your post doesn't appear to be related to renting a property.";
+        String SUCCESS_MESSAGE = "Your post is successfully created!";
+        String FAILED_MESSAGE = "Oops! This platform is for accommodation rentals. Your post doesn't appear to be related to renting a property.";
 
         String postText = formPostRequest.getTitle() + formPostRequest.getDescription();
 
@@ -59,5 +61,14 @@ public class PostController {
     @GetMapping("/{id}")
     public ResponseEntity<PostResponse> post(@PathVariable Long id) {
         return new ResponseEntity(PostMapper.toPostResponse(postService.getById(id)), HttpStatus.OK);
+    }
+
+    @GetMapping("/my")
+    public ResponseEntity<PostResponse> allPostsByUser(@RequestParam(defaultValue = "0") Integer pageNumber,
+                                                       @RequestParam(defaultValue = "10") Integer pageSize,
+                                                       @AuthenticationPrincipal UserDetails userDetails) {
+        Page<PostDTO> postDTOPage= postService.getAllPostsByUser(pageSize, pageNumber, userDetails.getUsername());
+        return new ResponseEntity(postDTOPage.map(PostMapper::toPostResponse), HttpStatus.OK);
+
     }
 }

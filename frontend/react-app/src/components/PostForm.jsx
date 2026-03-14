@@ -55,6 +55,7 @@ const PostForm = () => {
 
             if (!response.ok) {
                 toast.error(await response.text(), { position: "top-center",style: {backgroundColor: 'red'} })
+                form.reset();
                 return;
             }
 
