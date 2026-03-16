@@ -96,4 +96,9 @@ public class GlobalExceptionHandler {
                 .build();
         return new ResponseEntity<>(error, error.getHttpStatus());
     }
+
+    @ExceptionHandler(NotAnAccommodationPostException.class)
+    public ErrorResponse handleNotAnAccommodationPostException(NotAnAccommodationPostException ex) {
+        return ErrorResponse.create(ex, HttpStatus.BAD_REQUEST, ex.getMessage());
+    }
 }

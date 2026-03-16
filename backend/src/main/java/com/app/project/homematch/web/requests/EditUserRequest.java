@@ -1,21 +1,15 @@
-package com.app.project.homematch.entity.DTO;
+package com.app.project.homematch.web.requests;
 
-import lombok.Builder;
 import lombok.Getter;
 
 import java.time.LocalDate;
 
-@Builder
 @Getter
-public class UserDTO {
-    private Long id;
-    private String username;
+public class EditUserRequest {
+    private String email;
     private String firstName;
     private String lastName;
     private String aboutMe;
-    private String email;
     private String phoneNumber;
     private LocalDate birthDate;
-    private int age;
-
 }

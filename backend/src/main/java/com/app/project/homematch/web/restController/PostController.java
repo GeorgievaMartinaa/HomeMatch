@@ -2,6 +2,7 @@ package com.app.project.homematch.web.restController;
 
 import com.app.project.homematch.entity.DTO.PostDTO;
 import com.app.project.homematch.entity.SortDirection;
+import com.app.project.homematch.exceptions.NotAnAccommodationPostException;
 import com.app.project.homematch.service.PostService;
 import com.app.project.homematch.service.mapper.PostMapper;
 import com.app.project.homematch.web.requests.FormPostRequest;
@@ -33,19 +34,33 @@ public class PostController {
     @PostMapping("/create")
     public ResponseEntity<String> createNewPost(@RequestBody FormPostRequest formPostRequest) {
         String SUCCESS_MESSAGE = "Your post is successfully created!";
-        String FAILED_MESSAGE = "Oops! This platform is for accommodation rentals. Your post doesn't appear to be related to renting a property.";
 
         String postText = formPostRequest.getTitle() + formPostRequest.getDescription();
 
         OpenAIResponse response = postService.analyzePost(postText);
 
         if (!response.getIsAccommodationPost()) {
-            return new ResponseEntity(FAILED_MESSAGE, HttpStatus.BAD_REQUEST);
+            throw new NotAnAccommodationPostException();
         }
 
         postService.newPostFromRequest(formPostRequest, response);
-        return new ResponseEntity(SUCCESS_MESSAGE, HttpStatus.CREATED);
+        return new ResponseEntity<>(SUCCESS_MESSAGE, HttpStatus.CREATED);
 
+    }
+
+    @RequestMapping("/{id}")
+    public ResponseEntity<String> editPost(@RequestBody FormPostRequest postRequest, @PathVariable Long id) {
+        String postText = postRequest.getTitle() + postRequest.getDescription();
+
+        OpenAIResponse response = postService.analyzePost(postText);
+
+        if (!response.getIsAccommodationPost()) {
+            throw new NotAnAccommodationPostException();
+        }
+
+        postService.editPost(postRequest, response, id);
+
+        return new ResponseEntity<>("Your post is successfully updated", HttpStatus.OK);
     }
 
     @GetMapping
@@ -55,20 +70,20 @@ public class PostController {
                                                        @RequestParam(defaultValue = "createdDate") String sortBy,
                                                        @RequestParam(defaultValue = "") String location) {
         Page<PostDTO> postDTOPage = postService.getAllPosts(pageSize, pageNumber, direction.name(), sortBy, location);
-        return new ResponseEntity(postDTOPage.map(PostMapper::toPostResponse), HttpStatus.OK);
+        return new ResponseEntity<>(postDTOPage.map(PostMapper::toPostResponse), HttpStatus.OK);
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<PostResponse> post(@PathVariable Long id) {
-        return new ResponseEntity(PostMapper.toPostResponse(postService.getById(id)), HttpStatus.OK);
+        return new ResponseEntity<>(PostMapper.toPostResponse(postService.getById(id)), HttpStatus.OK);
     }
 
     @GetMapping("/my")
-    public ResponseEntity<PostResponse> allPostsByUser(@RequestParam(defaultValue = "0") Integer pageNumber,
+    public ResponseEntity<Page<PostResponse>> allPostsByUser(@RequestParam(defaultValue = "0") Integer pageNumber,
                                                        @RequestParam(defaultValue = "10") Integer pageSize,
                                                        @AuthenticationPrincipal UserDetails userDetails) {
-        Page<PostDTO> postDTOPage= postService.getAllPostsByUser(pageSize, pageNumber, userDetails.getUsername());
-        return new ResponseEntity(postDTOPage.map(PostMapper::toPostResponse), HttpStatus.OK);
+        Page<PostDTO> postDTOPage = postService.getAllPostsByUser(pageSize, pageNumber, userDetails.getUsername());
+        return new ResponseEntity<>(postDTOPage.map(PostMapper::toPostResponse), HttpStatus.OK);
 
     }
 }

@@ -16,5 +16,7 @@ public interface PostService {
 
     PostDTO getById(Long postId);
 
-    Page<PostDTO>getAllPostsByUser(int pageSize, int pageNumber, String username);
+    Page<PostDTO> getAllPostsByUser(int pageSize, int pageNumber, String username);
+
+    void editPost(FormPostRequest postRequest, OpenAIResponse aiResponse, Long postId);
 }

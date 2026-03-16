@@ -60,14 +60,16 @@ export default function HomePage() {
 
     }, [pageNumber, debouncedFilter, sortField, sortDirection])
 
-    return (<div className='flex flex-col gap-5'>
-        <Header page='home'/>
-        <div className='flex flex-col gap-3 px-[2rem]'>
+    return (
+        <div className='flex flex-col gap-5'>
+            <Header page='home'/>
+            <div className='flex flex-col gap-3 px-8'>
 
-            <SortAndFilter setPageNumber={setPageNumber} setDebouncedFilter={setDebouncedFilter}
-                           setSortValue={setSortValue} sortValue={sortValue}/>
-            <PostList pageNumber={pageNumber} setPageNumber={setPageNumber} posts={posts}
-                      isLoading={isLoading} totalPages={totalPages}/>
+                <SortAndFilter setPageNumber={setPageNumber} setDebouncedFilter={setDebouncedFilter}
+                               setSortValue={setSortValue} sortValue={sortValue}/>
+                <PostList pageNumber={pageNumber} setPageNumber={setPageNumber} posts={posts}
+                          isLoading={isLoading} totalPages={totalPages}/>
+            </div>
         </div>
-    </div>)
+    )
 }

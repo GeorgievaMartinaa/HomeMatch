@@ -6,12 +6,13 @@ import RegisterPage from '@/pages/auth/RegisterPage.jsx'
 import RegistrationSuccess from "@/pages/auth/RegistrationSuccess";
 import HomePage from "@/pages/HomePage";
 import CreatePostPage from "@/pages/CreatePostPage";
+import ProfilePage from "@/pages/ProfilePage.jsx";
 
 function App() {
     return (
         <Routes>
             <Route element={<ProtectedRoute/>}>
-                <Route path={'profile'} element={<div>Profile page</div>}/>
+                <Route path={'profile'} element={<ProfilePage/>}/>
             </Route>
             <Route path={'login'} element={<LoginPage/>}/>
             <Route path={'register'} element={<RegisterPage/>}/>

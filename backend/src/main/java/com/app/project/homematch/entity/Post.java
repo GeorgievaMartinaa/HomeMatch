@@ -78,6 +78,13 @@ public class Post {
                 .build();
     }
 
+    public void update(String title, String description, String location, int price, String currency){
+        this.title = title;
+        this.description = description;
+        this.location = location;
+        this.price= new Money(BigDecimal.valueOf(price), Currency.valueOf(currency));
+    }
+
     private static int convertPriceToMKD(BigDecimal price, String currency){
         if(Currency.EUR.name().equals(currency)){
             return price.multiply(EUR_TO_MKD_CURSE)

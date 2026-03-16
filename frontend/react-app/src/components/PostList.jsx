@@ -22,9 +22,10 @@ export default function PostList({isLoading, posts, totalPages, setPageNumber, p
 
     return (
         <div>
-            {isLoading ? (<div className=' h-screen flex justify-center items-center'>
-                <Spinner className="size-8"/>
-            </div>) : (
+            {isLoading ? (
+                <div className=' h-screen flex justify-center items-center'>
+                    <Spinner className="size-8"/>
+                </div>) : (
                 <>
                     <div className='flex gap-2'>
                         <div className={`flex flex-wrap gap-2 ${selectedElement ? 'w-full sm:w-2/3 h-min' : 'w-full'}`}>

@@ -10,6 +10,7 @@ import com.app.project.homematch.service.PostService;
 import com.app.project.homematch.service.UserService;
 import com.app.project.homematch.service.externalAPI.OpenAIService;
 import com.app.project.homematch.service.mapper.PostMapper;
+import com.app.project.homematch.valueObject.PostId;
 import com.app.project.homematch.web.requests.FormPostRequest;
 import com.app.project.homematch.web.responses.OpenAIResponse;
 import lombok.RequiredArgsConstructor;
@@ -52,6 +53,7 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public void newFetchedPost(PostDTO postDTO) {
         createNewPost(postDTO);
     }
@@ -63,26 +65,30 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public OpenAIResponse analyzePost(String text) {
         return openAIService.analyzePost(text);
     }
 
     @Override
-    public Page<PostDTO> getAllPosts(int pageSize, int pageNumber, String sortDirection, String sortBy, String location ) {
+    @Transactional(readOnly = true)
+    public Page<PostDTO> getAllPosts(int pageSize, int pageNumber, String sortDirection, String sortBy, String location) {
         PageRequest pageRequest = PageRequest.of(pageNumber, pageSize, Sort.by(Sort.Direction.valueOf(sortDirection), sortBy));
 
-        Page<Post> posts = postRepository.findAllByLocationContains(location,pageRequest);
+        Page<Post> posts = postRepository.findAllByLocationContains(location, pageRequest);
 
         return posts.map(PostMapper::toDTO);
     }
 
     @Override
+    @Transactional(readOnly = true)
     public PostDTO getById(Long postId) {
-        PostProjection post = postRepository.getById(postId).orElseThrow(()-> new PostNotFoundException(postId));
+        PostProjection post = postRepository.getById(postId).orElseThrow(() -> new PostNotFoundException(postId));
         return PostMapper.toDTO(post);
     }
 
     @Override
+    @Transactional(readOnly = true)
     public Page<PostDTO> getAllPostsByUser(int pageSize, int pageNumber, String username) {
         PageRequest pageRequest = PageRequest.of(pageNumber, pageSize, Sort.by(Sort.Direction.DESC, "createdDate"));
         UserDTO userDto = userService.findByUsername(username);
@@ -90,6 +96,13 @@ public class PostServiceImpl implements PostService {
         Page<Post> postsByUser = postRepository.findAllByCreatorId(userDto.getId(), pageRequest);
 
         return postsByUser.map(PostMapper::toDTO);
+    }
+
+    @Override
+    @Transactional
+    public void editPost(FormPostRequest postRequest, OpenAIResponse aiResponse, Long postId) {
+        Post post = postRepository.findById(PostId.toPostId(postId)).orElseThrow(() -> new PostNotFoundException(postId));
+        post.update(postRequest.getTitle(), postRequest.getDescription(), aiResponse.getLocation(), aiResponse.getPrice(), aiResponse.getCurrency());
     }
 
 

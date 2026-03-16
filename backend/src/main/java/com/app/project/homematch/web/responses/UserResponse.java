@@ -1,4 +1,4 @@
-package com.app.project.homematch.entity.DTO;
+package com.app.project.homematch.web.responses;
 
 import lombok.Builder;
 import lombok.Getter;
@@ -7,8 +7,7 @@ import java.time.LocalDate;
 
 @Builder
 @Getter
-public class UserDTO {
-    private Long id;
+public class UserResponse {
     private String username;
     private String firstName;
     private String lastName;
@@ -17,5 +16,4 @@ public class UserDTO {
     private String phoneNumber;
     private LocalDate birthDate;
     private int age;
-
 }
