@@ -1,6 +1,6 @@
 import {Link} from "react-router";
 import {Button} from "@/components/ui/button";
-import {LogInIcon, LogOutIcon, User} from "lucide-react";
+import {LogInIcon, LogOutIcon, User, Plus} from "lucide-react";
 import {
     DropdownMenu,
     DropdownMenuContent,
@@ -11,7 +11,7 @@ import {useCallback, useContext} from "react";
 import {AuthContext} from "@/context/authContext";
 
 export default function Header({page}) {
-    const {isAuthenticated, logout, userName} = useContext(AuthContext)
+    const {isAuthenticated, logout} = useContext(AuthContext)
 
     const handleLogOut = useCallback(() => {
         logout()
@@ -26,7 +26,8 @@ export default function Header({page}) {
                 <div>
                     <div className='flex gap-3'>
                         <Button className='hover:cursor-pointer'>
-                            <Link to={'/create_post'}>Create post</Link>
+                            <Plus />
+                            <Link to={'/create_post'}>Нов пост</Link>
                         </Button>
 
                         <DropdownMenu>
@@ -41,7 +42,7 @@ export default function Header({page}) {
                                         <DropdownMenuItem
                                             className='hover:cursor-pointer focus:bg-background focus:text-accent'>
                                             <User className='focus:text-accent'/>
-                                            Profile
+                                            Мој профил
                                         </DropdownMenuItem>
                                     </Link>
                                     <DropdownMenuSeparator/>
@@ -50,7 +51,7 @@ export default function Header({page}) {
                                             className='hover:cursor-pointer focus:bg-background focus:text-accent'
                                             onClick={handleLogOut}>
                                             <LogOutIcon className='focus:text-accent'/>
-                                            Sign Out
+                                            Одјави се
                                         </DropdownMenuItem>
                                     </Link>
                                 </DropdownMenuContent>
@@ -60,7 +61,7 @@ export default function Header({page}) {
                                         <DropdownMenuItem
                                             className='hover:cursor-pointer focus:bg-background focus:text-accent'>
                                             <LogInIcon className='focus:text-accent'/>
-                                            Sign In
+                                            Најави се
                                         </DropdownMenuItem>
                                     </Link>
                                 </DropdownMenuContent>

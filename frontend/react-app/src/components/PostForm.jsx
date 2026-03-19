@@ -15,7 +15,7 @@ import {Textarea} from "@/components/ui/textarea";
 import {Button} from "@/components/ui/button";
 import {Toaster} from "@/components/ui/sonner";
 import {toast} from "sonner";
-import {useContext, useState} from "react";
+import {useContext} from "react";
 import {AuthContext} from "@/context/authContext";
 
 
@@ -65,7 +65,6 @@ const PostForm = () => {
             console.error("Error submitting form:", error);
         }
         form.reset();
-
     }
 
     return (

@@ -24,7 +24,7 @@ export default function PostDetails({post, onClose}) {
                 </ItemContent>
                 <Separator/>
                 <ItemContent className='w-full text-left'>
-                    <ItemTitle>Contact details:</ItemTitle>
+                    <ItemTitle>Детали за контакт:</ItemTitle>
                     <div className='flex flex-col gap-2 pl-2 pt-2'>
                         <div className='flex items-center gap-2'>
                             <User size='16'/>

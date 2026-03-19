@@ -1,10 +1,10 @@
-import {useContext, useEffect, useRef, useState} from "react";
+import {useCallback, useContext, useEffect, useRef, useState} from "react";
 import Header from "@/components/Header.jsx";
 import PostList from "@/components/PostList.jsx";
 import {AuthContext} from "@/context/authContext.jsx";
-import UserDetails from "@/components/UserDetails.jsx";
+import UserDetailsBox from "@/components/UserDetailsBox.jsx";
 
-export default function ProfilePage(){
+export default function ProfilePage() {
     const [posts, setPosts] = useState([])
     const [pageNumber, setPageNumber] = useState(0);
     const [totalPages, setTotalPages] = useState(0);
@@ -36,7 +36,7 @@ export default function ProfilePage(){
 
             const response = await fetch(`${baseUrl}?${params.toString()}`, {
                 method: "GET",
-                credentials:"include",
+                credentials: "include",
                 headers: {
                     "Content-Type": "application/json",
                     "Authorization": `Bearer ${token}`
@@ -64,13 +64,13 @@ export default function ProfilePage(){
     }, [pageNumber])
 
     useEffect(() => {
-        const fetchUserDetails  = async () => {
+        const fetchUserDetails = async () => {
             setIsLoadingUserDetails(true)
-            console.log("TOKEN:: ",token)
+            console.log("TOKEN:: ", token)
 
             const response = await fetch('http://localhost:8080/api/v1/user', {
                 method: "GET",
-                credentials:"include",
+                credentials: "include",
                 headers: {
                     "Content-Type": "application/json",
                     "Authorization": `Bearer ${token}`
@@ -83,7 +83,7 @@ export default function ProfilePage(){
                 return;
             }
             const data = await response.json();
-            console.log("DATA USER: " , data)
+            console.log("DATA USER: ", data)
             setUserDetails(data)
 
             setIsLoadingUserDetails(false)
@@ -91,14 +91,19 @@ export default function ProfilePage(){
 
         fetchUserDetails()
     }, [token]);
-    console.log("USER DETAILS: ",userDetails)
+    console.log("USER DETAILS: ", userDetails)
+
+    const changePageNumber = useCallback((newPageNumber) => {
+        setPageNumber(newPageNumber)
+    }, [])
 
     return (
         <div className='flex flex-col gap-5'>
             <Header page='home'/>
-            <div className='px-8'>
-                <UserDetails data={userDetails}/>
-                <PostList pageNumber={pageNumber} setPageNumber={setPageNumber} posts={posts}
+            <div className='px-8 flex text-start flex-col gap-4'>
+                <UserDetailsBox data={userDetails} isLoading={isLoadingUserDetails}/>
+                <h3 className="font-bold text-xl text-accent pl-5">Мои постови</h3>
+                <PostList pageNumber={pageNumber} setPageNumber={changePageNumber} posts={posts}
                           isLoading={isLoading} totalPages={totalPages}/>
             </div>
         </div>

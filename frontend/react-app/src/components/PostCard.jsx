@@ -1,4 +1,5 @@
 import {Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle} from "@/components/ui/card";
+import {useCallback} from "react";
 
 export function PostCard({post, selectElement}) {
 
@@ -14,10 +15,10 @@ export function PostCard({post, selectElement}) {
         return await response.json();
     }
 
-    const postDetails = async () => {
+    const postDetails = useCallback(async () => {
         const fetchedPost = await fetchPostById(post.id);
         selectElement(fetchedPost);
-    }
+    }, [post])
 
     function formatPostDate(instantString) {
         const postDate = new Date(instantString);

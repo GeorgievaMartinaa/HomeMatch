@@ -35,7 +35,7 @@ export default function SortAndFilter({setPageNumber, setDebouncedFilter, setSor
             <div className='w-1/2 sm:w-1/3 ml-1 flex flex-col gap-5 sm:flex-row'>
                 <div className='sm:w-2/3 w-full'>
                     <InputGroup>
-                        <InputGroupInput type="text" placeholder="Filter by location..." value={filterText}
+                        <InputGroupInput type="text" placeholder="Пребарувај според локација..." value={filterText}
                                          onChange={handleFilterPosts}/>
                         {filterText && (
                             <InputGroupAddon align="inline-end">
@@ -52,10 +52,10 @@ export default function SortAndFilter({setPageNumber, setDebouncedFilter, setSor
                                 <SelectValue placeholder="Sort by..."/>
                             </SelectTrigger>
                             <SelectContent position="popper" className=' bg-card'>
-                                <SelectItem value="priceMKD ASC">Price <ArrowUp/> </SelectItem>
-                                <SelectItem value="priceMKD DESC">Price <ArrowDown/> </SelectItem>
-                                <SelectItem value="createdDate ASC">Date <ArrowUp/></SelectItem>
-                                <SelectItem value="createdDate DESC">Date <ArrowDown/></SelectItem>
+                                <SelectItem value="priceMKD ASC">Цена <ArrowUp/> </SelectItem>
+                                <SelectItem value="priceMKD DESC">Цена <ArrowDown/> </SelectItem>
+                                <SelectItem value="createdDate ASC">Креирано на<ArrowUp/></SelectItem>
+                                <SelectItem value="createdDate DESC">Креирано на<ArrowDown/></SelectItem>
                             </SelectContent>
                         </Select>
                     </Field>

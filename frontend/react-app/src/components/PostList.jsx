@@ -1,4 +1,4 @@
-import {useState} from "react";
+import {useCallback, useState} from "react";
 import {PostCard} from "@/components/PostCard";
 import {PaginationComponent} from "@/components/Pagination";
 import PostDetails from "@/components/PostDetails";
@@ -8,9 +8,9 @@ export default function PostList({isLoading, posts, totalPages, setPageNumber, p
 
     const [selectedElement, setSelectedElement] = useState(null);
 
-    const handleCloseDetails = () => {
+    const handleCloseDetails = useCallback(() => {
         setSelectedElement(null)
-    }
+    },[])
 
     const onNextPage = () => {
         setPageNumber(pageNumber + 1);
@@ -18,6 +18,12 @@ export default function PostList({isLoading, posts, totalPages, setPageNumber, p
     const onPrevPage = () => {
         setPageNumber(pageNumber - 1);
     }
+
+    const changeSelectedElement = useCallback((post) => {
+        if (selectedElement !== post) {
+            setSelectedElement(post)
+        }
+    }, [selectedElement])
 
 
     return (
@@ -30,7 +36,7 @@ export default function PostList({isLoading, posts, totalPages, setPageNumber, p
                     <div className='flex gap-2'>
                         <div className={`flex flex-wrap gap-2 ${selectedElement ? 'w-full sm:w-2/3 h-min' : 'w-full'}`}>
                             {posts.map(post => {
-                                return <PostCard post={post} key={post.id} selectElement={setSelectedElement}/>
+                                return <PostCard post={post} key={post.id} selectElement={changeSelectedElement}/>
                             })}
                         </div>
                         {selectedElement &&

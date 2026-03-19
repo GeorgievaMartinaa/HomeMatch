@@ -21,7 +21,7 @@ public class BirthDate {
     private LocalDate birthDate;
 
     public int getAge(){
-        Period period = Period.between(LocalDate.now(), getBirthDate());
+        Period period = Period.between(getBirthDate(), LocalDate.now());
         return period.getYears();
     }
 }
