@@ -13,6 +13,7 @@ public class PostResponse {
     String title;
     String description;
     LocalDateTime lastTimeUpdated;
+    LocalDateTime createdAt;
     String location;
     BigDecimal priceAmount;
     String priceCurrency;

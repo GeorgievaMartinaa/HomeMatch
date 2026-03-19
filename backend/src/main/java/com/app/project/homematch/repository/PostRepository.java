@@ -14,14 +14,13 @@ import java.util.Optional;
 @Repository
 public interface PostRepository extends JpaRepository<Post, PostId> {
     @Query(value = """
-            SELECT p.id, p.title, p.description, p.updated_date as last_time_updated, p.location, p.price_amount, p.price_currency, p.creator_id,
-            u.first_name as creator_first_name, u.last_name as creator_last_name, u.phone_number as creator_phone_number, u.email as creator_email,
-            p.fetched_from, p.original_post_url
-            FROM post p JOIN user u ON p.creator_id = u.id
+            SELECT p.id, p.title, p.description, p.updated_date, p.created_date, p.location, p.price_amount, p.price_currency, p.creator_id,
+            p.fetched_from, p.original_post_url, p.price_mkd
+            FROM post p
             WHERE p.id = :id
             """,
             nativeQuery = true)
-    Optional<PostProjection> getById(@Param(value = "id")Long id);
+    Optional<Post> getById(@Param(value = "id")Long id);
 
     Page<Post> findAllByLocationContains(String location, Pageable pageable);
 

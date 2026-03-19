@@ -22,4 +22,5 @@ public class PostDTO {
     private String externalApi;
     private String originalPostUrl;
     private LocalDateTime lastTimeUpdated;
+    private LocalDateTime createdAt;
 }

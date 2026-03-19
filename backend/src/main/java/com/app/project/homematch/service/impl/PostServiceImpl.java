@@ -4,7 +4,6 @@ import com.app.project.homematch.entity.DTO.PostDTO;
 import com.app.project.homematch.entity.DTO.UserDTO;
 import com.app.project.homematch.entity.Post;
 import com.app.project.homematch.exceptions.PostNotFoundException;
-import com.app.project.homematch.repository.PostProjection;
 import com.app.project.homematch.repository.PostRepository;
 import com.app.project.homematch.service.PostService;
 import com.app.project.homematch.service.UserService;
@@ -83,7 +82,11 @@ public class PostServiceImpl implements PostService {
     @Override
     @Transactional(readOnly = true)
     public PostDTO getById(Long postId) {
-        PostProjection post = postRepository.getById(postId).orElseThrow(() -> new PostNotFoundException(postId));
+        Post post = postRepository.getById(postId).orElseThrow(() -> new PostNotFoundException(postId));
+        if(post.getCreatorId() != null){
+          UserDTO userDTO = userService.findById(post.getCreatorId());
+          return PostMapper.toDTO(post, userDTO);
+        }
         return PostMapper.toDTO(post);
     }
 
