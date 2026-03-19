@@ -7,15 +7,11 @@ import {
     DropdownMenuItem, DropdownMenuSeparator,
     DropdownMenuTrigger
 } from "@/components/ui/dropdown-menu";
-import {useCallback, useContext} from "react";
+import { useContext} from "react";
 import {AuthContext} from "@/context/authContext";
 
 export default function Header({page}) {
     const {isAuthenticated, logout} = useContext(AuthContext)
-
-    const handleLogOut = useCallback(() => {
-        logout()
-    }, [])
 
     return (
         <div className='flex justify-between py-3 px-10 bg-card/80 shadow-md shadow-white/50'>
@@ -49,7 +45,7 @@ export default function Header({page}) {
                                     <Link to={'/'}>
                                         <DropdownMenuItem
                                             className='hover:cursor-pointer focus:bg-background focus:text-accent'
-                                            onClick={handleLogOut}>
+                                            onClick={logout}>
                                             <LogOutIcon className='focus:text-accent'/>
                                             Одјави се
                                         </DropdownMenuItem>

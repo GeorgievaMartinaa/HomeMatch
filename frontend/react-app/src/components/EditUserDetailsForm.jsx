@@ -1,4 +1,4 @@
-import {useContext, useEffect, useState} from "react";
+import {useContext, useEffect} from "react";
 import {AuthContext} from "@/context/authContext.jsx";
 import {Controller, useForm} from "react-hook-form";
 import {toast} from "sonner";
@@ -9,8 +9,7 @@ import {Textarea} from "@/components/ui/textarea.jsx";
 import {Button} from "@/components/ui/button.jsx";
 import {DialogClose} from "@/components/ui/dialog.jsx";
 
-export default function EditUserDetailsForm({data}) {
-    const [isEditing, setIsEditing] = useState(false);
+export default function EditUserDetailsForm({data, onSuccess}) {
     const {token} = useContext(AuthContext);
 
     const form = useForm({
@@ -61,7 +60,8 @@ export default function EditUserDetailsForm({data}) {
             }
 
             toast.success("Profile updated successfully", {position: "top-center", style: {backgroundColor: "green"}});
-            setIsEditing(false);
+            form.reset();
+            if (onSuccess) onSuccess();
         } catch (error) {
             console.error("Error updating profile:", error);
         }
@@ -77,7 +77,6 @@ export default function EditUserDetailsForm({data}) {
             <form onSubmit={form.handleSubmit(onSubmit)}>
                 <FieldGroup>
                     <FieldSet>
-                        <FieldLegend>Contact Info</FieldLegend>
                         <FieldGroup>
                             <Controller
                                 name="username"

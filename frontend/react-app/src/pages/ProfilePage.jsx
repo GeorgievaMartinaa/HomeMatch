@@ -2,7 +2,7 @@ import {useCallback, useContext, useEffect, useRef, useState} from "react";
 import Header from "@/components/Header.jsx";
 import PostList from "@/components/PostList.jsx";
 import {AuthContext} from "@/context/authContext.jsx";
-import UserDetailsBox from "@/components/UserDetailsBox.jsx";
+import UserDetails from '@/components/UserDetails.jsx'
 
 export default function ProfilePage() {
     const [posts, setPosts] = useState([])
@@ -61,12 +61,11 @@ export default function ProfilePage() {
 
         fetchPosts();
 
-    }, [pageNumber])
+    }, [pageNumber,token])
 
     useEffect(() => {
         const fetchUserDetails = async () => {
             setIsLoadingUserDetails(true)
-            console.log("TOKEN:: ", token)
 
             const response = await fetch('http://localhost:8080/api/v1/user', {
                 method: "GET",
@@ -83,7 +82,6 @@ export default function ProfilePage() {
                 return;
             }
             const data = await response.json();
-            console.log("DATA USER: ", data)
             setUserDetails(data)
 
             setIsLoadingUserDetails(false)
@@ -91,7 +89,21 @@ export default function ProfilePage() {
 
         fetchUserDetails()
     }, [token]);
-    console.log("USER DETAILS: ", userDetails)
+
+    const refetchUserDetails = useCallback(async () => {
+        const response = await fetch('http://localhost:8080/api/v1/user', {
+            method: "GET",
+            credentials: "include",
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": `Bearer ${token}`
+            },
+        })
+
+        if (!response.ok) return;
+        const data = await response.json();
+        setUserDetails(data)
+    }, [token]);
 
     const changePageNumber = useCallback((newPageNumber) => {
         setPageNumber(newPageNumber)
@@ -101,7 +113,7 @@ export default function ProfilePage() {
         <div className='flex flex-col gap-5'>
             <Header page='home'/>
             <div className='px-8 flex text-start flex-col gap-4'>
-                <UserDetailsBox data={userDetails} isLoading={isLoadingUserDetails}/>
+                <UserDetails data={userDetails} isLoading={isLoadingUserDetails} onUserUpdated={refetchUserDetails}/>
                 <h3 className="font-bold text-xl text-accent pl-5">Мои постови</h3>
                 <PostList pageNumber={pageNumber} setPageNumber={changePageNumber} posts={posts}
                           isLoading={isLoading} totalPages={totalPages}/>
