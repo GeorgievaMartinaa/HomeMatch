@@ -96,7 +96,7 @@ public class PostMapper {
         .priceAmount(postDTO.getPrice())
         .priceCurrency(postDTO.getCurrency())
         .location(postDTO.getLocation())
-        .creatorId(String.valueOf(postDTO.getCreatorId()))
+        .creatorId(postDTO.getCreatorId() != null ? String.valueOf(postDTO.getCreatorId()): null)
         .creatorName(postDTO.getCreatorName())
         .creatorEmail(postDTO.getCreatorEmail())
         .creatorPhoneNumber(postDTO.getCreatorPhoneNumber())

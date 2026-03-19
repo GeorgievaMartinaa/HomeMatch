@@ -6,8 +6,10 @@ import EditUserDetailsForm from '@/components/EditUserDetailsForm.jsx'
 import { Spinner } from '@/components/ui/spinner.jsx'
 import { useState } from 'react'
 
-export default function UserDetails({ data, isLoading, onUserUpdated }) {
+export default function UserDetails({ data, isLoading, onUserUpdated, canEdit, title }) {
   const [open, setOpen] = useState(false)
+
+  console.log("USERDETAILS DATA: ", data)
 
   function handleSuccess() {
     setOpen(false)
@@ -17,28 +19,30 @@ export default function UserDetails({ data, isLoading, onUserUpdated }) {
   return (
     isLoading ? <Spinner /> : (
       <Item
-        className=" py-10 pr-10 w-fit flex flex-col  justify-self-center gap-5 border-4 border-double border-card rounded-xl shadow-md shadow-card-foreground/20">
+        className={` ${canEdit ? 'py-10 pr-10 border-4 border-double border-card rounded-xl shadow-md shadow-card-foreground/20' : 'p-0'} gap-5 w-fit flex flex-col`}>
         <div className="flex justify-between items-center w-full">
-          <ItemHeader className="font-bold text-xl text-accent">Информации за корисникот</ItemHeader>
-          <Dialog open={open} onOpenChange={setOpen}>
-            <DialogTrigger asChild>
-              <Button variant="link" className="hover:cursor-pointer hover:text-accent text-white">
-                <SquarePen className="size-6" />
-              </Button>
-            </DialogTrigger>
-            <DialogContent>
-              <DialogHeader>
-                <DialogTitle>Edit your profile</DialogTitle>
-                <DialogDescription>
-                  Make changes to your profile here.
-                </DialogDescription>
-              </DialogHeader>
-              <EditUserDetailsForm data={data} onSuccess={handleSuccess} />
-            </DialogContent>
-          </Dialog>
+          <ItemHeader className="font-bold text-xl text-accent">{title ? title : 'Информации за корисникот'}</ItemHeader>
+          {canEdit && (
+            <Dialog open={open} onOpenChange={setOpen}>
+              <DialogTrigger asChild>
+                <Button variant="link" className="hover:cursor-pointer hover:text-accent text-white">
+                  <SquarePen className="size-6" />
+                </Button>
+              </DialogTrigger>
+              <DialogContent>
+                <DialogHeader>
+                  <DialogTitle>Уреди го твојот профил</DialogTitle>
+                  <DialogDescription>
+                    Промени ги твоите податоци
+                  </DialogDescription>
+                </DialogHeader>
+                <EditUserDetailsForm data={data} onSuccess={handleSuccess} />
+              </DialogContent>
+            </Dialog>
+          )}
         </div>
         <ItemSeparator />
-        <div className="flex gap-5 lg:gap-20 flex-wrap">
+        <div className={`${canEdit ? 'flex gap-5 lg:gap-20 flex-wrap' : ' flex flex-col gap-2'} w-full`}>
           <div className="flex flex-col gap-2 h-1/2">
             <ItemContent className="flex flex-row gap-2 h-1/2">
               <ItemTitle>Корисник:</ItemTitle>
@@ -81,7 +85,7 @@ export default function UserDetails({ data, isLoading, onUserUpdated }) {
         {data.aboutMe && (
           <div className="w-full">
             <ItemContent className="flex text-start gap-2">
-              <ItemTitle>Повеќе информации за корисникот:</ItemTitle>
+              <ItemTitle>Повеќе информации:</ItemTitle>
               <ItemDescription className="w-full">{data.aboutMe} </ItemDescription>
             </ItemContent>
           </div>

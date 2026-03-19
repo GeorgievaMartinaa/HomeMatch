@@ -113,7 +113,7 @@ export default function ProfilePage() {
         <div className='flex flex-col gap-5'>
             <Header page='home'/>
             <div className='px-8 flex text-start flex-col gap-4'>
-                <UserDetails data={userDetails} isLoading={isLoadingUserDetails} onUserUpdated={refetchUserDetails}/>
+                <UserDetails data={userDetails} isLoading={isLoadingUserDetails} onUserUpdated={refetchUserDetails} canEdit={true}/>
                 <h3 className="font-bold text-xl text-accent pl-5">Мои постови</h3>
                 <PostList pageNumber={pageNumber} setPageNumber={changePageNumber} posts={posts}
                           isLoading={isLoading} totalPages={totalPages}/>

@@ -25,7 +25,6 @@ export default function PostList({isLoading, posts, totalPages, setPageNumber, p
         }
     }, [selectedElement])
 
-
     return (
         <div>
             {isLoading ? (

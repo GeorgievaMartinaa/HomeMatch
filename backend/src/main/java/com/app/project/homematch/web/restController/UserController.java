@@ -11,6 +11,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -34,5 +35,10 @@ public class UserController {
     @PostMapping
     public ResponseEntity<UserResponse> editUserInfo(@AuthenticationPrincipal UserDetails userDetails, @RequestBody EditUserRequest request) {
         return new ResponseEntity<>(UserMapper.toUserResponse(userService.editUser(userDetails.getUsername(), request)), HttpStatus.OK);
+    }
+
+    @GetMapping("/{id}")
+  public ResponseEntity<UserResponse> userInfo(@PathVariable Long id) {
+      return new ResponseEntity<>(UserMapper.toUserResponse(userService.findById(id)), HttpStatus.OK);
     }
 }

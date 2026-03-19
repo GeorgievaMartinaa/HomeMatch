@@ -56,7 +56,7 @@ export function PostCard({post, selectElement}) {
                 <CardDescription className='line-clamp-2'>{post.location}</CardDescription>
                 <CardDescription>{post.priceAmount} {post.priceCurrency}</CardDescription>
             </CardHeader>
-            <CardContent className='text-left'>
+            <CardContent className='text-left h-1/3'>
                 <p className='line-clamp-2'>{post.description}</p>
             </CardContent>
             <CardFooter className='justify-end'>
