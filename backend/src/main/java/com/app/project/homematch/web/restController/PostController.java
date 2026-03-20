@@ -55,7 +55,7 @@ public class PostController {
 
       if(!postService.isPostOwner(id, userDetails.getUsername()))
       {
-        throw new NotPostOwner();
+        throw new NotPostOwner(userDetails.getUsername(), id);
       }
         String postText = postRequest.getTitle() + postRequest.getDescription();
 
@@ -97,7 +97,7 @@ public class PostController {
     @DeleteMapping("/{id}")
   public ResponseEntity<String> deletePost(@PathVariable Long id, @AuthenticationPrincipal UserDetails userDetails) {
       if(!postService.isPostOwner(id, userDetails.getUsername())){
-        throw new NotPostOwner();
+        throw new NotPostOwner(userDetails.getUsername(), id);
       }
 
       postService.deletePost(id);

@@ -4,7 +4,7 @@ import {editUser} from "@/repository/UserRepository";
 import {Controller, useForm} from "react-hook-form";
 import {toast} from "sonner";
 import {Toaster} from "@/components/ui/sonner.jsx";
-import {Field, FieldError, FieldGroup, FieldLabel, FieldLegend, FieldSet} from "@/components/ui/field.jsx";
+import {Field, FieldError, FieldGroup, FieldLabel, FieldSet} from "@/components/ui/field.jsx";
 import {Input} from "@/components/ui/input.jsx";
 import {Textarea} from "@/components/ui/textarea.jsx";
 import {Button} from "@/components/ui/button.jsx";
