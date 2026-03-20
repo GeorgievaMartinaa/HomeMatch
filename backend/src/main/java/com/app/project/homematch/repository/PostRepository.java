@@ -25,4 +25,11 @@ public interface PostRepository extends JpaRepository<Post, PostId> {
     Page<Post> findAllByLocationContains(String location, Pageable pageable);
 
     Page<Post> findAllByCreatorId(Long creatorId, Pageable pageable);
+
+    @Query(nativeQuery = true, value = """
+                    SELECT IF(COUNT(*) > 0, 'true', 'false')
+                    FROM post p join user u on p.creator_id = u.id
+                    WHERE p.id = :id AND u.username = :creatorUsername
+        """)
+    Boolean existsByIdAndCreator(@Param("id") Long id, @Param("creatorUsername") String creatorUsername );
 }

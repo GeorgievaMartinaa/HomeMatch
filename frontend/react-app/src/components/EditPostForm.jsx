@@ -1,15 +1,7 @@
 import * as z from "zod"
-import {useForm, Controller,} from "react-hook-form";
+import {useForm, Controller} from "react-hook-form";
 import {zodResolver} from "@hookform/resolvers/zod";
-import {
-    Field,
-    FieldDescription,
-    FieldError,
-    FieldGroup,
-    FieldLabel,
-    FieldLegend,
-    FieldSet
-} from "@/components/ui/field";
+import {Field, FieldError, FieldGroup, FieldLabel, FieldSet} from "@/components/ui/field";
 import {Input} from "@/components/ui/input";
 import {Textarea} from "@/components/ui/textarea";
 import {Button} from "@/components/ui/button";
@@ -17,8 +9,7 @@ import {Toaster} from "@/components/ui/sonner";
 import {toast} from "sonner";
 import {useContext} from "react";
 import {AuthContext} from "@/context/authContext";
-import {createPost} from "@/repository/PostRepository";
-
+import {editPost} from "@/repository/PostRepository";
 
 const formSchema = z.object({
     title: z
@@ -29,51 +20,44 @@ const formSchema = z.object({
         .min(50, "Description must be at least 50 characters.")
 })
 
-const PostForm = () => {
+export default function EditPostForm({post, onSuccess}) {
+    const {token} = useContext(AuthContext)
+
     const form = useForm({
         resolver: zodResolver(formSchema),
         defaultValues: {
-            title: "",
-            description: "",
+            title: post.title || "",
+            description: post.description || "",
         },
     })
 
-    const {token} = useContext(AuthContext)
-    const { formState: { isSubmitting } } = form;
+    const {formState: {isSubmitting}} = form;
 
     async function onSubmit(data) {
         try {
-            const text = await createPost(data, token)
-            toast.success(text, { position: "top-center", style: {backgroundColor: 'green'} })
+            const text = await editPost(post.id, data, token)
+            toast.success(text, {position: "top-center", style: {backgroundColor: 'green'}})
+            onSuccess();
         } catch (error) {
-            toast.error(error.message, { position: "top-center", style: {backgroundColor: 'red'} })
+            toast.error(error.message, {position: "top-center", style: {backgroundColor: 'red'}})
         }
-        form.reset();
     }
 
     return (
         <div className="w-full max-w-lg">
-            <Toaster />
+            <Toaster/>
             <form onSubmit={form.handleSubmit(onSubmit)}>
                 <FieldGroup>
                     <FieldSet>
-                        <FieldLegend>Post your accommodation</FieldLegend>
-                        <FieldDescription>
-                            Create post for the accommodation that you are renting or looking for. Enter as much
-                            details as you can for the best results. Enter the location and price as the most important
-                            details.
-                        </FieldDescription>
                         <FieldGroup>
                             <Controller
                                 name="title"
                                 control={form.control}
                                 render={({field, fieldState}) => (
                                     <Field>
-                                        <FieldLabel htmlFor="form_title">
-                                            Title
-                                        </FieldLabel>
+                                        <FieldLabel htmlFor="edit_post_title">Title</FieldLabel>
                                         <Input
-                                            id="form_title"
+                                            id="edit_post_title"
                                             placeholder="Enter title"
                                             {...field}
                                             aria-invalid={fieldState.invalid}
@@ -89,11 +73,9 @@ const PostForm = () => {
                                 control={form.control}
                                 render={({field, fieldState}) => (
                                     <Field>
-                                        <FieldLabel htmlFor="form_description">
-                                            Description
-                                        </FieldLabel>
+                                        <FieldLabel htmlFor="edit_post_description">Description</FieldLabel>
                                         <Textarea
-                                            id="form_description"
+                                            id="edit_post_description"
                                             placeholder="Enter accommodation description"
                                             {...field}
                                             aria-invalid={fieldState.invalid}
@@ -102,12 +84,13 @@ const PostForm = () => {
                                             <FieldError errors={[fieldState.error]}/>
                                         )}
                                     </Field>
-                                )}/>
+                                )}
+                            />
                         </FieldGroup>
                     </FieldSet>
                     <Field orientation="horizontal">
                         <Button type="submit" disabled={isSubmitting}>
-                            {isSubmitting ? "Submitting..." : "Submit"}
+                            {isSubmitting ? "Saving..." : "Save"}
                         </Button>
                     </Field>
                 </FieldGroup>
@@ -115,5 +98,3 @@ const PostForm = () => {
         </div>
     )
 }
-
-export default PostForm;

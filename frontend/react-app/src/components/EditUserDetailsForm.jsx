@@ -1,5 +1,6 @@
 import {useContext, useEffect} from "react";
 import {AuthContext} from "@/context/authContext.jsx";
+import {editUser} from "@/repository/UserRepository";
 import {Controller, useForm} from "react-hook-form";
 import {toast} from "sonner";
 import {Toaster} from "@/components/ui/sonner.jsx";
@@ -44,26 +45,12 @@ export default function EditUserDetailsForm({data, onSuccess}) {
         const {username, ...editData} = formData;
 
         try {
-            const response = await fetch("http://localhost:8080/api/v1/user", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                    "Authorization": `Bearer ${token}`,
-                },
-                credentials: "include",
-                body: JSON.stringify(editData),
-            });
-
-            if (!response.ok) {
-                toast.error(await response.text(), {position: "top-center", style: {backgroundColor: "red"}});
-                return;
-            }
-
+            await editUser(editData, token);
             toast.success("Profile updated successfully", {position: "top-center", style: {backgroundColor: "green"}});
             form.reset();
             if (onSuccess) onSuccess();
         } catch (error) {
-            console.error("Error updating profile:", error);
+            toast.error(error.message, {position: "top-center", style: {backgroundColor: "red"}});
         }
     }
 

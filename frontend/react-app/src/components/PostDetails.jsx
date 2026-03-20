@@ -1,34 +1,51 @@
-import { useState } from "react"
+import { useContext, useState } from "react"
 import { Item, ItemActions, ItemContent, ItemDescription, ItemHeader, ItemSeparator, ItemTitle } from "@/components/ui/item"
 import { Separator } from "@/components/ui/separator"
 import { Button } from "@/components/ui/button"
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
-import { Mail, Phone, User, X, ExternalLink, Globe } from "lucide-react"
+import { Mail, Phone, User, X, ExternalLink, Globe, Pencil, Trash2 } from "lucide-react"
 import UserDetails from '@/components/UserDetails.jsx'
+import EditPostForm from '@/components/EditPostForm.jsx'
 import { Link } from "react-router"
+import { AuthContext } from "@/context/authContext"
+import { getUserById } from "@/repository/UserRepository"
+import { deletePost } from "@/repository/PostRepository"
 
 
-export default function PostDetails({ post, onClose }) {
+export default function PostDetails({ post, onClose, isOwner, onPostChanged }) {
+  const { token } = useContext(AuthContext)
   const [creatorDetails, setCreatorDetails] = useState(null)
   const [open, setOpen] = useState(false)
+  const [editOpen, setEditOpen] = useState(false)
+  const [deleteOpen, setDeleteOpen] = useState(false)
+  const [isDeleting, setIsDeleting] = useState(false)
 
   async function fetchCreatorDetails() {
     if (creatorDetails) return
     try {
-      const response = await fetch(`http://localhost:8080/api/v1/user/${post.creatorId}`, {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-        },
-      })
-      if (response.ok) {
-        const data = await response.json()
-        console.log(data)
-        setCreatorDetails(data)
-      }
+      const data = await getUserById(post.creatorId)
+      setCreatorDetails(data)
     } catch (error) {
       console.error("Error fetching creator details:", error)
     }
+  }
+
+  async function handleDelete() {
+    setIsDeleting(true)
+    try {
+      await deletePost(post.id, token)
+      setDeleteOpen(false)
+      onClose()
+      onPostChanged()
+    } catch (error) {
+      console.error("Error deleting post:", error)
+    }
+    setIsDeleting(false)
+  }
+
+  function handleEditSuccess() {
+    setEditOpen(false)
+    onPostChanged()
   }
 
   const changeOpenDialog = async (isOpen) => {
@@ -39,6 +56,7 @@ export default function PostDetails({ post, onClose }) {
       setOpen(false)
     }
   }
+
   return (
     <>
       <Item>
@@ -107,6 +125,46 @@ export default function PostDetails({ post, onClose }) {
               </div>
             </div>
           </ItemContent>
+        )}
+        {isOwner && (
+          <>
+            <Separator />
+            <div className="flex gap-2 justify-end">
+              <Dialog open={editOpen} onOpenChange={setEditOpen}>
+                <DialogTrigger asChild>
+                  <Button variant="outline" size="sm" className="hover:cursor-pointer">
+                    <Pencil className="size-4 mr-1" /> Измени
+                  </Button>
+                </DialogTrigger>
+                <DialogContent>
+                  <DialogHeader>
+                    <DialogTitle>Измени пост</DialogTitle>
+                    <DialogDescription>Направи промени на твојот пост.</DialogDescription>
+                  </DialogHeader>
+                  <EditPostForm post={post} onSuccess={handleEditSuccess} />
+                </DialogContent>
+              </Dialog>
+              <Dialog open={deleteOpen} onOpenChange={setDeleteOpen}>
+                <DialogTrigger asChild>
+                  <Button variant="destructive" size="sm" className="hover:cursor-pointer">
+                    <Trash2 className="size-4 mr-1" /> Избриши
+                  </Button>
+                </DialogTrigger>
+                <DialogContent>
+                  <DialogHeader>
+                    <DialogTitle>Избриши пост</DialogTitle>
+                    <DialogDescription>Дали сте сигурни дека сакате да го избришете овој пост? Оваа акција не може да се врати.</DialogDescription>
+                  </DialogHeader>
+                  <div className="flex gap-2 justify-end">
+                    <Button variant="outline" onClick={() => setDeleteOpen(false)} className="hover:cursor-pointer">Откажи</Button>
+                    <Button variant="destructive" onClick={handleDelete} disabled={isDeleting} className="hover:cursor-pointer">
+                      {isDeleting ? "Бришење..." : "Избриши"}
+                    </Button>
+                  </div>
+                </DialogContent>
+              </Dialog>
+            </div>
+          </>
         )}
       </Item>
     </>

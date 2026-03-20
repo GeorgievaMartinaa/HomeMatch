@@ -1,23 +1,16 @@
 import {Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle} from "@/components/ui/card";
 import {useCallback} from "react";
+import {getPostById} from "@/repository/PostRepository";
 
 export function PostCard({post, selectElement}) {
 
-    const fetchPostById = async (postId) => {
-        const response = await fetch(`http://localhost:8080/api/v1/post/${postId}`, {
-            method: "GET"
-        })
-
-        if (!response.ok) {
-            console.log("Error fetch post details")
-            return;
-        }
-        return await response.json();
-    }
-
     const postDetails = useCallback(async () => {
-        const fetchedPost = await fetchPostById(post.id);
-        selectElement(fetchedPost);
+        try {
+            const fetchedPost = await getPostById(post.id);
+            selectElement(fetchedPost);
+        } catch (error) {
+            console.error(error.message);
+        }
     }, [post])
 
     function formatPostDate(instantString) {
@@ -60,7 +53,7 @@ export function PostCard({post, selectElement}) {
                 <p className='line-clamp-2'>{post.description}</p>
             </CardContent>
             <CardFooter className='justify-end'>
-                <p>{formatPostDate(post.lastTimeUpdated)}</p>
+                <p>{formatPostDate(post.createdAt)}</p>
             </CardFooter>
         </Card>
     )

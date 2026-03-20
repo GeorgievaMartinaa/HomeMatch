@@ -3,8 +3,9 @@ import {PostCard} from "@/components/PostCard";
 import {PaginationComponent} from "@/components/Pagination";
 import PostDetails from "@/components/PostDetails";
 import {Spinner} from "@/components/ui/spinner";
+import {getPostById} from "@/repository/PostRepository";
 
-export default function PostList({isLoading, posts, totalPages, setPageNumber, pageNumber}) {
+export default function PostList({isLoading, posts, totalPages, setPageNumber, pageNumber, isOwner, onPostChanged}) {
 
     const [selectedElement, setSelectedElement] = useState(null);
 
@@ -20,10 +21,20 @@ export default function PostList({isLoading, posts, totalPages, setPageNumber, p
     }
 
     const changeSelectedElement = useCallback((post) => {
-        if (selectedElement !== post) {
-            setSelectedElement(post)
+        setSelectedElement(post)
+    }, [])
+
+    const handlePostChanged = useCallback(async () => {
+        if (onPostChanged) onPostChanged()
+        if (selectedElement) {
+            try {
+                const updated = await getPostById(selectedElement.id)
+                setSelectedElement(updated)
+            } catch {
+                setSelectedElement(null)
+            }
         }
-    }, [selectedElement])
+    }, [selectedElement, onPostChanged])
 
     return (
         <div>
@@ -40,7 +51,7 @@ export default function PostList({isLoading, posts, totalPages, setPageNumber, p
                         </div>
                         {selectedElement &&
                             <div className='w-full sm:w-1/3'>
-                                <PostDetails post={selectedElement} onClose={handleCloseDetails}/>
+                                <PostDetails post={selectedElement} onClose={handleCloseDetails} isOwner={isOwner} onPostChanged={handlePostChanged}/>
                             </div>
                         }
                     </div>

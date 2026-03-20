@@ -3,6 +3,7 @@ package com.app.project.homematch.web.restController;
 import com.app.project.homematch.entity.DTO.PostDTO;
 import com.app.project.homematch.entity.SortDirection;
 import com.app.project.homematch.exceptions.NotAnAccommodationPostException;
+import com.app.project.homematch.exceptions.NotPostOwner;
 import com.app.project.homematch.service.PostService;
 import com.app.project.homematch.service.mapper.PostMapper;
 import com.app.project.homematch.web.requests.FormPostRequest;
@@ -15,6 +16,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -49,7 +51,12 @@ public class PostController {
     }
 
     @RequestMapping("/{id}")
-    public ResponseEntity<String> editPost(@RequestBody FormPostRequest postRequest, @PathVariable Long id) {
+    public ResponseEntity<String> editPost(@RequestBody FormPostRequest postRequest, @PathVariable Long id, @AuthenticationPrincipal UserDetails userDetails) {
+
+      if(!postService.isPostOwner(id, userDetails.getUsername()))
+      {
+        throw new NotPostOwner();
+      }
         String postText = postRequest.getTitle() + postRequest.getDescription();
 
         OpenAIResponse response = postService.analyzePost(postText);
@@ -84,6 +91,17 @@ public class PostController {
                                                        @AuthenticationPrincipal UserDetails userDetails) {
         Page<PostDTO> postDTOPage = postService.getAllPostsByUser(pageSize, pageNumber, userDetails.getUsername());
         return new ResponseEntity<>(postDTOPage.map(PostMapper::toPostResponse), HttpStatus.OK);
+
+    }
+
+    @DeleteMapping("/{id}")
+  public ResponseEntity<String> deletePost(@PathVariable Long id, @AuthenticationPrincipal UserDetails userDetails) {
+      if(!postService.isPostOwner(id, userDetails.getUsername())){
+        throw new NotPostOwner();
+      }
+
+      postService.deletePost(id);
+      return new ResponseEntity<>("Your post is successfully deleted", HttpStatus.OK);
 
     }
 }

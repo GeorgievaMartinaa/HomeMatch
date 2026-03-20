@@ -6,17 +6,22 @@ import com.app.project.homematch.web.responses.OpenAIResponse;
 import org.springframework.data.domain.Page;
 
 public interface PostService {
-    void newPostFromRequest(FormPostRequest postRequest, OpenAIResponse aiResponse);
 
-    void newFetchedPost(PostDTO postDTO);
+  void newPostFromRequest(FormPostRequest postRequest, OpenAIResponse aiResponse);
 
-    OpenAIResponse analyzePost(String text);
+  void newFetchedPost(PostDTO postDTO);
 
-    Page<PostDTO> getAllPosts(int pageSize, int pageNumber, String sortDirection, String sortBy, String location);
+  OpenAIResponse analyzePost(String text);
 
-    PostDTO getById(Long postId);
+  Page<PostDTO> getAllPosts(int pageSize, int pageNumber, String sortDirection, String sortBy, String location);
 
-    Page<PostDTO> getAllPostsByUser(int pageSize, int pageNumber, String username);
+  PostDTO getById(Long postId);
 
-    void editPost(FormPostRequest postRequest, OpenAIResponse aiResponse, Long postId);
+  Page<PostDTO> getAllPostsByUser(int pageSize, int pageNumber, String username);
+
+  void editPost(FormPostRequest postRequest, OpenAIResponse aiResponse, Long postId);
+
+  Boolean isPostOwner(Long postId, String username);
+
+  void deletePost(Long postId);
 }

@@ -3,6 +3,8 @@ import Header from "@/components/Header.jsx";
 import PostList from "@/components/PostList.jsx";
 import {AuthContext} from "@/context/authContext.jsx";
 import UserDetails from '@/components/UserDetails.jsx'
+import {getMyPosts} from "@/repository/PostRepository";
+import {getCurrentUser} from "@/repository/UserRepository";
 
 export default function ProfilePage() {
     const [posts, setPosts] = useState([])
@@ -13,6 +15,7 @@ export default function ProfilePage() {
     const [userDetails, setUserDetails] = useState({});
 
     const pageCache = useRef({});
+    const [postsVersion, setPostsVersion] = useState(0);
 
     const {token} = useContext(AuthContext)
 
@@ -25,65 +28,35 @@ export default function ProfilePage() {
             return;
         }
 
-        const baseUrl = 'http://localhost:8080/api/v1/post/my';
-        const params = new URLSearchParams({
-            pageNumber: pageNumber,
-            pageSize: 12,
-        });
-
         const fetchPosts = async () => {
             setIsLoading(true);
-
-            const response = await fetch(`${baseUrl}?${params.toString()}`, {
-                method: "GET",
-                credentials: "include",
-                headers: {
-                    "Content-Type": "application/json",
-                    "Authorization": `Bearer ${token}`
-                },
-            })
-
-            if (!response.ok) {
-                console.log("Error fetch posts TEXT: ", response.text())
-                console.log("Error fetch posts JSON: ", response.json())
-                return;
+            try {
+                const data = await getMyPosts({pageNumber, pageSize: 12}, token);
+                pageCache.current[cacheKey] = {
+                    posts: data.content,
+                    totalPages: data.totalPages
+                };
+                setPosts(data.content)
+                setTotalPages(data.totalPages)
+            } catch (error) {
+                console.error(error.message)
             }
-            const data = await response.json();
-            pageCache.current[cacheKey] = {
-                posts: data.content,
-                totalPages: data.totalPages
-            };
-            setPosts(data.content)
-            setTotalPages(data.totalPages)
-
             setIsLoading(false)
         }
 
         fetchPosts();
 
-    }, [pageNumber,token])
+    }, [pageNumber, token, postsVersion])
 
     useEffect(() => {
         const fetchUserDetails = async () => {
             setIsLoadingUserDetails(true)
-
-            const response = await fetch('http://localhost:8080/api/v1/user', {
-                method: "GET",
-                credentials: "include",
-                headers: {
-                    "Content-Type": "application/json",
-                    "Authorization": `Bearer ${token}`
-                },
-            })
-
-            if (!response.ok) {
-                console.log("Error fetch posts TEXT: ", response.text())
-                console.log("Error fetch posts JSON: ", response.json())
-                return;
+            try {
+                const data = await getCurrentUser(token);
+                setUserDetails(data)
+            } catch (error) {
+                console.error(error.message)
             }
-            const data = await response.json();
-            setUserDetails(data)
-
             setIsLoadingUserDetails(false)
         }
 
@@ -91,23 +64,22 @@ export default function ProfilePage() {
     }, [token]);
 
     const refetchUserDetails = useCallback(async () => {
-        const response = await fetch('http://localhost:8080/api/v1/user', {
-            method: "GET",
-            credentials: "include",
-            headers: {
-                "Content-Type": "application/json",
-                "Authorization": `Bearer ${token}`
-            },
-        })
-
-        if (!response.ok) return;
-        const data = await response.json();
-        setUserDetails(data)
+        try {
+            const data = await getCurrentUser(token);
+            setUserDetails(data)
+        } catch (error) {
+            console.error(error.message)
+        }
     }, [token]);
 
     const changePageNumber = useCallback((newPageNumber) => {
         setPageNumber(newPageNumber)
     }, [])
+
+  const postChanged = useCallback(() => {
+    pageCache.current = {};
+    setPostsVersion(v => v + 1)
+  },[])
 
     return (
         <div className='flex flex-col gap-5'>
@@ -116,7 +88,7 @@ export default function ProfilePage() {
                 <UserDetails data={userDetails} isLoading={isLoadingUserDetails} onUserUpdated={refetchUserDetails} canEdit={true}/>
                 <h3 className="font-bold text-xl text-accent pl-5">Мои постови</h3>
                 <PostList pageNumber={pageNumber} setPageNumber={changePageNumber} posts={posts}
-                          isLoading={isLoading} totalPages={totalPages}/>
+                          isLoading={isLoading} totalPages={totalPages} isOwner onPostChanged={postChanged}/>
             </div>
         </div>
     )

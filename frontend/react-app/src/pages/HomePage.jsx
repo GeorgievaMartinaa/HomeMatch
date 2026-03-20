@@ -2,6 +2,7 @@ import Header from '../components/Header.jsx'
 import PostList from '../components/PostList.jsx'
 import SortAndFilter from "@/components/SortAndFilter.jsx";
 import {useEffect, useRef, useState} from "react";
+import {getAllPosts} from "@/repository/PostRepository";
 
 export default function HomePage() {
     const [posts, setPosts] = useState([])
@@ -25,34 +26,22 @@ export default function HomePage() {
             return;
         }
 
-        const baseUrl = 'http://localhost:8080/api/v1/post';
-        const params = new URLSearchParams({
-            pageNumber: pageNumber,
-            pageSize: 12,
-            location: debouncedFilter,
-            sortBy: sortField,
-            direction: sortDirection
-        });
-
         const fetchPosts = async () => {
             setIsLoading(true);
-
-            const response = await fetch(`${baseUrl}?${params.toString()}`, {
-                method: "GET",
-            })
-
-            if (!response.ok) {
-                console.log("Error fetch posts")
-                return;
+            try {
+                const data = await getAllPosts({
+                    pageNumber, pageSize: 12, location: debouncedFilter,
+                    sortBy: sortField, direction: sortDirection
+                });
+                pageCache.current[cacheKey] = {
+                    posts: data.content,
+                    totalPages: data.totalPages
+                };
+                setPosts(data.content)
+                setTotalPages(data.totalPages)
+            } catch (error) {
+                console.error(error.message)
             }
-            const data = await response.json();
-            pageCache.current[cacheKey] = {
-                posts: data.content,
-                totalPages: data.totalPages
-            };
-            setPosts(data.content)
-            setTotalPages(data.totalPages)
-
             setIsLoading(false)
         }
 
@@ -60,6 +49,7 @@ export default function HomePage() {
 
     }, [pageNumber, debouncedFilter, sortField, sortDirection])
 
+  console.log("HOME PAGE: ",posts)
     return (
         <div className='flex flex-col gap-5'>
             <Header page='home'/>
