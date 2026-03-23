@@ -3,6 +3,7 @@ package com.app.project.homematch.entity;
 import com.app.project.homematch.entity.DTO.PostDTO;
 import com.app.project.homematch.valueObject.Currency;
 import com.app.project.homematch.valueObject.Money;
+import com.app.project.homematch.valueObject.PostCategory;
 import com.app.project.homematch.valueObject.PostId;
 import jakarta.persistence.AttributeOverride;
 import jakarta.persistence.AttributeOverrides;
@@ -11,6 +12,8 @@ import jakarta.persistence.Embedded;
 import jakarta.persistence.EmbeddedId;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EntityListeners;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -61,6 +64,9 @@ public class Post {
     private Long creatorId;
     @Column(name = "price_mkd")
     private int priceMKD;
+    @Column(name = "category")
+    @Enumerated(EnumType.STRING)
+    private PostCategory category;
 
     private static BigDecimal EUR_TO_MKD_CURSE = BigDecimal.valueOf(61.5);
 
@@ -75,14 +81,16 @@ public class Post {
                 .originalPostURL(postDTO.getOriginalPostUrl())
                 .price(new Money(postDTO.getPrice(), Currency.valueOf(postDTO.getCurrency())))
                 .priceMKD(convertPriceToMKD(postDTO.getPrice(), postDTO.getCurrency()))
+                .category(PostCategory.valueOf(postDTO.getCategory()))
                 .build();
     }
 
-    public void update(String title, String description, String location, int price, String currency){
+    public void update(String title, String description, String location, int price, String currency, String category){
         this.title = title;
         this.description = description;
         this.location = location;
-        this.price= new Money(BigDecimal.valueOf(price), Currency.valueOf(currency));
+        this.price = new Money(BigDecimal.valueOf(price), Currency.valueOf(currency));
+        this.category = category != null ? PostCategory.valueOf(category) : this.category;
     }
 
     private static int convertPriceToMKD(BigDecimal price, String currency){

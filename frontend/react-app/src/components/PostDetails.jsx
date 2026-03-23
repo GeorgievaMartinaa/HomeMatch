@@ -61,7 +61,14 @@ export default function PostDetails({ post, onClose, isOwner, onPostChanged }) {
     <>
       <Item>
         <div className="flex justify-between w-full">
-          <ItemTitle className="text-lg">{post.title}</ItemTitle>
+          <div className="flex items-center gap-3">
+            <ItemTitle className="text-lg">{post.title}</ItemTitle>
+            {post.category && (
+              <span className={`text-xs font-medium px-2 py-0.5 rounded-full ${post.category === 'RENT' ? 'bg-blue-500/20 text-blue-400' : 'bg-green-500/20 text-green-400'}`}>
+                {post.category === 'RENT' ? 'Издавање' : 'Продажба'}
+              </span>
+            )}
+          </div>
           <ItemActions>
             <Button variant="ghost" size="icon" className="rounded-full hover:cursor-pointer"
                     onClick={onClose}>

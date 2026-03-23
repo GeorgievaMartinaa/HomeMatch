@@ -9,6 +9,7 @@ import com.app.project.homematch.service.PostService;
 import com.app.project.homematch.service.UserService;
 import com.app.project.homematch.service.externalAPI.OpenAIService;
 import com.app.project.homematch.service.mapper.PostMapper;
+import com.app.project.homematch.valueObject.PostCategory;
 import com.app.project.homematch.valueObject.PostId;
 import com.app.project.homematch.web.requests.FormPostRequest;
 import com.app.project.homematch.web.responses.OpenAIResponse;
@@ -44,6 +45,7 @@ public class PostServiceImpl implements PostService {
         .location(aiResponse.getLocation())
         .price(BigDecimal.valueOf(aiResponse.getPrice()))
         .currency(aiResponse.getCurrency())
+        .category(aiResponse.getCategory())
         .creatorId(userDto.getId())
         .build();
 
@@ -70,11 +72,16 @@ public class PostServiceImpl implements PostService {
 
   @Override
   @Transactional(readOnly = true)
-  public Page<PostDTO> getAllPosts(int pageSize, int pageNumber, String sortDirection, String sortBy, String location) {
+  public Page<PostDTO> getAllPosts(int pageSize, int pageNumber, String sortDirection, String sortBy, String location, String category) {
     PageRequest pageRequest = PageRequest.of(pageNumber, pageSize,
         Sort.by(Sort.Direction.valueOf(sortDirection), sortBy));
 
-    Page<Post> posts = postRepository.findAllByLocationContains(location, pageRequest);
+    Page<Post> posts;
+    if (category != null) {
+      posts = postRepository.findAllByLocationContainsAndCategory(location, PostCategory.valueOf(category), pageRequest);
+    } else {
+      posts = postRepository.findAllByLocationContains(location, pageRequest);
+    }
 
     return posts.map(PostMapper::toDTO);
   }
@@ -92,11 +99,16 @@ public class PostServiceImpl implements PostService {
 
   @Override
   @Transactional(readOnly = true)
-  public Page<PostDTO> getAllPostsByUser(int pageSize, int pageNumber, String username) {
+  public Page<PostDTO> getAllPostsByUser(int pageSize, int pageNumber, String username, String category) {
     PageRequest pageRequest = PageRequest.of(pageNumber, pageSize, Sort.by(Sort.Direction.DESC, "createdDate"));
     UserDTO userDto = userService.findByUsername(username);
 
-    Page<Post> postsByUser = postRepository.findAllByCreatorId(userDto.getId(), pageRequest);
+    Page<Post> postsByUser;
+    if (category != null) {
+      postsByUser = postRepository.findAllByCreatorIdAndCategory(userDto.getId(), PostCategory.valueOf(category), pageRequest);
+    } else {
+      postsByUser = postRepository.findAllByCreatorId(userDto.getId(), pageRequest);
+    }
 
     return postsByUser.map(PostMapper::toDTO);
   }
@@ -106,7 +118,7 @@ public class PostServiceImpl implements PostService {
   public void editPost(FormPostRequest postRequest, OpenAIResponse aiResponse, Long postId) {
     Post post = postRepository.findById(PostId.toPostId(postId)).orElseThrow(() -> new PostNotFoundException(postId));
     post.update(postRequest.getTitle(), postRequest.getDescription(), aiResponse.getLocation(), aiResponse.getPrice(),
-        aiResponse.getCurrency());
+        aiResponse.getCurrency(), aiResponse.getCategory());
   }
 
   @Override

@@ -13,11 +13,11 @@ public interface PostService {
 
   OpenAIResponse analyzePost(String text);
 
-  Page<PostDTO> getAllPosts(int pageSize, int pageNumber, String sortDirection, String sortBy, String location);
+  Page<PostDTO> getAllPosts(int pageSize, int pageNumber, String sortDirection, String sortBy, String location, String category);
 
   PostDTO getById(Long postId);
 
-  Page<PostDTO> getAllPostsByUser(int pageSize, int pageNumber, String username);
+  Page<PostDTO> getAllPostsByUser(int pageSize, int pageNumber, String username, String category);
 
   void editPost(FormPostRequest postRequest, OpenAIResponse aiResponse, Long postId);
 

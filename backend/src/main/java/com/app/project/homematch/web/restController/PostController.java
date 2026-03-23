@@ -75,9 +75,10 @@ public class PostController {
                                                        @RequestParam(defaultValue = "10") Integer pageSize,
                                                        @RequestParam(defaultValue = "DESC") SortDirection direction,
                                                        @RequestParam(defaultValue = "createdDate") String sortBy,
-                                                       @RequestParam(defaultValue = "") String location) {
-        Page<PostDTO> postDTOPage = postService.getAllPosts(pageSize, pageNumber, direction.name(), sortBy, location);
-        return new ResponseEntity<>(postDTOPage.map(PostMapper::toPostResponse), HttpStatus.OK);
+                                                       @RequestParam(defaultValue = "") String location,
+                                                       @RequestParam(required = false) String category) {
+        Page<PostDTO> postDTOPage = postService.getAllPosts(pageSize, pageNumber, direction.name(), sortBy, location, category);
+          return new ResponseEntity<>(postDTOPage.map(PostMapper::toPostResponse), HttpStatus.OK);
     }
 
     @GetMapping("/{id}")
@@ -88,8 +89,9 @@ public class PostController {
     @GetMapping("/my")
     public ResponseEntity<Page<PostResponse>> allPostsByUser(@RequestParam(defaultValue = "0") Integer pageNumber,
                                                        @RequestParam(defaultValue = "10") Integer pageSize,
+                                                       @RequestParam(required = false) String category,
                                                        @AuthenticationPrincipal UserDetails userDetails) {
-        Page<PostDTO> postDTOPage = postService.getAllPostsByUser(pageSize, pageNumber, userDetails.getUsername());
+        Page<PostDTO> postDTOPage = postService.getAllPostsByUser(pageSize, pageNumber, userDetails.getUsername(), category);
         return new ResponseEntity<>(postDTOPage.map(PostMapper::toPostResponse), HttpStatus.OK);
 
     }

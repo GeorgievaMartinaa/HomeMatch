@@ -8,4 +8,5 @@ public class OpenAIResponse {
     private String location;
     private int price;
     private String currency;
+    private String category;
 }

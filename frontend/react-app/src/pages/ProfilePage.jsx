@@ -5,6 +5,8 @@ import {AuthContext} from "@/context/authContext.jsx";
 import UserDetails from '@/components/UserDetails.jsx'
 import {getMyPosts} from "@/repository/PostRepository";
 import {getCurrentUser} from "@/repository/UserRepository";
+import {Select, SelectContent, SelectItem, SelectTrigger, SelectValue} from "@/components/ui/select";
+import {Field} from "@/components/ui/field";
 
 export default function ProfilePage() {
     const [posts, setPosts] = useState([])
@@ -16,11 +18,12 @@ export default function ProfilePage() {
 
     const pageCache = useRef({});
     const [postsVersion, setPostsVersion] = useState(0);
+    const [categoryFilter, setCategoryFilter] = useState('');
 
     const {token} = useContext(AuthContext)
 
     useEffect(() => {
-        const cacheKey = `${pageNumber}`;
+        const cacheKey = `${pageNumber}-${categoryFilter}`;
 
         if (pageCache.current[cacheKey]) {
             setPosts(pageCache.current[cacheKey].posts);
@@ -31,7 +34,7 @@ export default function ProfilePage() {
         const fetchPosts = async () => {
             setIsLoading(true);
             try {
-                const data = await getMyPosts({pageNumber, pageSize: 12}, token);
+                const data = await getMyPosts({pageNumber, pageSize: 12, category: categoryFilter}, token);
                 pageCache.current[cacheKey] = {
                     posts: data.content,
                     totalPages: data.totalPages
@@ -46,7 +49,7 @@ export default function ProfilePage() {
 
         fetchPosts();
 
-    }, [pageNumber, token, postsVersion])
+    }, [pageNumber, token, postsVersion, categoryFilter])
 
     useEffect(() => {
         const fetchUserDetails = async () => {
@@ -85,8 +88,26 @@ export default function ProfilePage() {
         <div className='flex flex-col gap-5'>
             <Header page='home'/>
             <div className='px-8 flex text-start flex-col gap-4'>
-                <UserDetails data={userDetails} isLoading={isLoadingUserDetails} onUserUpdated={refetchUserDetails} canEdit={true}/>
-                <h3 className="font-bold text-xl text-accent pl-5">Мои постови</h3>
+                <UserDetails data={userDetails} isLoading={isLoadingUserDetails} onUserUpdated={refetchUserDetails} canEdit={true} title="Податоци за тебе"/>
+                <div className="flex flex-col lg:flex-row items-center justify-between gap-4 pl-5 w-full">
+                    <h3 className="font-bold text-xl text-accent w-full lg:w-1/4">Твои постови</h3>
+                    <Field className="w-full lg:w-1/6 pr-5">
+                        <Select value={categoryFilter || "ALL"} onValueChange={(value) => {
+                            setCategoryFilter(value === "ALL" ? "" : value);
+                            setPageNumber(0);
+                            pageCache.current = {};
+                        }}>
+                            <SelectTrigger>
+                                <SelectValue placeholder="Категорија..."/>
+                            </SelectTrigger>
+                            <SelectContent position="popper" className="bg-card">
+                                <SelectItem value="ALL">Сите</SelectItem>
+                                <SelectItem value="RENT">Издавање</SelectItem>
+                                <SelectItem value="SELL">Продажба</SelectItem>
+                            </SelectContent>
+                        </Select>
+                    </Field>
+                </div>
                 <PostList pageNumber={pageNumber} setPageNumber={changePageNumber} posts={posts}
                           isLoading={isLoading} totalPages={totalPages} isOwner onPostChanged={postChanged}/>
             </div>

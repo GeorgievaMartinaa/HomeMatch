@@ -9,8 +9,6 @@ import { useState } from 'react'
 export default function UserDetails({ data, isLoading, onUserUpdated, canEdit, title }) {
   const [open, setOpen] = useState(false)
 
-  console.log("USERDETAILS DATA: ", data)
-
   function handleSuccess() {
     setOpen(false)
     onUserUpdated()

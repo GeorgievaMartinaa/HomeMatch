@@ -22,12 +22,11 @@ public class OpenAIService {
         this.objectMapper = objectMapper;
     }
 
-    //ToDo: Change the systemPrompt to be more precise
     public OpenAIResponse analyzePost (String postText){
         String systemPrompt = """
                 Ти си помошник кој анализира текст.
-                Твоја задача е да препознаеш дали текстот се однесува за издавање на сместување и да вратиш JSON со:
-                isAccommodationPost": true, "location": string, "price": int, "currency": string
+                Твоја задача е да препознаеш дали текстот се однесува за издавање или продажба на сместување и да вратиш JSON со:
+                "isAccommodationPost": true, "location": string, "price": int, "currency": string, "category": string
                 За "location" треба ја препознаеш конкретната локација (улица, број град, населба).
                 Ако не можеш со сигурност да ја одредиш цената како број, за "price" врати 0.
                 Доколку цената е во евра, за currency стави EUR.
@@ -35,8 +34,11 @@ public class OpenAIService {
                 Доколку цената е во некоја друга валута, конвертирај ја цената во македонски денари
                 и за currency стави MKD.
                 Доколку не можеш да ја одредиш валутата или ако нема валута стави NONE.
-                Доколку текстот не се однесува за сместување или е напишан од некој кој БАРА сместување,
-                врати JSON со "isAccommodationPost": false, и null вредности за "location", "price" и "currency".
+                За "category" одреди дали постот е за издавање (RENT) или продажба (SELL) на сместување.
+                Доколку текстот зборува за кирија, месечна рата, издавање, наем - стави RENT.
+                Доколку текстот зборува за продажба, купување, продавање - стави SELL.
+                Доколку текстот не се однесува за сместување, врати JSON со "isAccommodationPost": false, 
+                и null вредности за "location", "price", "currency" и "category".
                 """;
 
         Map<String, Object> requestBody = Map.of(

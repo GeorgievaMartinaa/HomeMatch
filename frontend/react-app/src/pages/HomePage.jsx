@@ -1,7 +1,7 @@
 import Header from '../components/Header.jsx'
 import PostList from '../components/PostList.jsx'
 import SortAndFilter from "@/components/SortAndFilter.jsx";
-import {useEffect, useRef, useState} from "react";
+import { useCallback, useEffect, useRef, useState } from "react"
 import {getAllPosts} from "@/repository/PostRepository";
 
 export default function HomePage() {
@@ -11,14 +11,14 @@ export default function HomePage() {
     const [debouncedFilter, setDebouncedFilter] = useState('');
     const [sortValue, setSortValue] = useState("createdDate DESC");
     const [isLoading, setIsLoading] = useState(false);
-
+    const [categoryFilter, setCategoryFilter] = useState('');
 
     const [sortField, sortDirection] = sortValue.split(" ");
     const pageCache = useRef({});
 
 
     useEffect(() => {
-        const cacheKey = `${pageNumber}-${debouncedFilter}-${sortField}-${sortDirection}`;
+        const cacheKey = `${pageNumber}-${debouncedFilter}-${sortField}-${sortDirection}-${categoryFilter}`;
 
         if (pageCache.current[cacheKey]) {
             setPosts(pageCache.current[cacheKey].posts);
@@ -31,7 +31,7 @@ export default function HomePage() {
             try {
                 const data = await getAllPosts({
                     pageNumber, pageSize: 12, location: debouncedFilter,
-                    sortBy: sortField, direction: sortDirection
+                    sortBy: sortField, direction: sortDirection, category: categoryFilter
                 });
                 pageCache.current[cacheKey] = {
                     posts: data.content,
@@ -47,16 +47,18 @@ export default function HomePage() {
 
         fetchPosts();
 
-    }, [pageNumber, debouncedFilter, sortField, sortDirection])
+    }, [pageNumber, debouncedFilter, sortField, sortDirection, categoryFilter])
 
-  console.log("HOME PAGE: ",posts)
-    return (
+  const changeCategoryFilter = useCallback((newValue) => setCategoryFilter(newValue), [])
+
+   return (
         <div className='flex flex-col gap-5'>
             <Header page='home'/>
             <div className='flex flex-col gap-3 px-8'>
 
                 <SortAndFilter setPageNumber={setPageNumber} setDebouncedFilter={setDebouncedFilter}
-                               setSortValue={setSortValue} sortValue={sortValue}/>
+                               setSortValue={setSortValue} sortValue={sortValue}
+                               setCategoryFilter={changeCategoryFilter} categoryFilter={categoryFilter}/>
                 <PostList pageNumber={pageNumber} setPageNumber={setPageNumber} posts={posts}
                           isLoading={isLoading} totalPages={totalPages}/>
             </div>

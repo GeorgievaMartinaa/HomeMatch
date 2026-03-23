@@ -21,6 +21,7 @@ public class PostDTO {
     private String creatorEmail;
     private String externalApi;
     private String originalPostUrl;
+    private String category;
     private LocalDateTime lastTimeUpdated;
     private LocalDateTime createdAt;
 }

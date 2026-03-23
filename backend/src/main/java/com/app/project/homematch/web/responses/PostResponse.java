@@ -21,6 +21,7 @@ public class PostResponse {
     String creatorName;
     String creatorEmail;
     String creatorPhoneNumber;
+    String category;
     String fetchedFrom;
     String originalPostUrl;
 }

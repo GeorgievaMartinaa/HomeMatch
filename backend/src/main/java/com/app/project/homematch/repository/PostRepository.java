@@ -1,6 +1,7 @@
 package com.app.project.homematch.repository;
 
 import com.app.project.homematch.entity.Post;
+import com.app.project.homematch.valueObject.PostCategory;
 import com.app.project.homematch.valueObject.PostId;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -13,23 +14,28 @@ import java.util.Optional;
 
 @Repository
 public interface PostRepository extends JpaRepository<Post, PostId> {
-    @Query(value = """
-            SELECT p.id, p.title, p.description, p.updated_date, p.created_date, p.location, p.price_amount, p.price_currency, p.creator_id,
-            p.fetched_from, p.original_post_url, p.price_mkd
-            FROM post p
-            WHERE p.id = :id
-            """,
-            nativeQuery = true)
-    Optional<Post> getById(@Param(value = "id")Long id);
 
-    Page<Post> findAllByLocationContains(String location, Pageable pageable);
+  @Query(value = """
+      SELECT p.id, p.title, p.description, p.updated_date, p.created_date, p.location, p.price_amount, p.price_currency, p.creator_id,
+      p.fetched_from, p.original_post_url, p.price_mkd, p.category
+      FROM post p
+      WHERE p.id = :id
+      """,
+      nativeQuery = true)
+  Optional<Post> getById(@Param(value = "id") Long id);
 
-    Page<Post> findAllByCreatorId(Long creatorId, Pageable pageable);
+  Page<Post> findAllByLocationContains(String location, Pageable pageable);
 
-    @Query(nativeQuery = true, value = """
-                    SELECT IF(COUNT(*) > 0, 'true', 'false')
-                    FROM post p join user u on p.creator_id = u.id
-                    WHERE p.id = :id AND u.username = :creatorUsername
-        """)
-    Boolean existsByIdAndCreator(@Param("id") Long id, @Param("creatorUsername") String creatorUsername );
+  Page<Post> findAllByLocationContainsAndCategory(String location, PostCategory category, Pageable pageable);
+
+  Page<Post> findAllByCreatorId(Long creatorId, Pageable pageable);
+
+  Page<Post> findAllByCreatorIdAndCategory(Long creatorId, PostCategory category, Pageable pageable);
+
+  @Query(nativeQuery = true, value = """
+                  SELECT IF(COUNT(*) > 0, 'true', 'false')
+                  FROM post p join user u on p.creator_id = u.id
+                  WHERE p.id = :id AND u.username = :creatorUsername
+      """)
+  Boolean existsByIdAndCreator(@Param("id") Long id, @Param("creatorUsername") String creatorUsername);
 }

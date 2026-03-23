@@ -44,6 +44,7 @@ public class PostMapper {
         .creatorPhoneNumber(userDTO.getPhoneNumber())
         .price(post.getPrice().getAmount())
         .currency(post.getPrice().getCurrency().name())
+        .category(post.getCategory() != null ? post.getCategory().name() : null)
         .lastTimeUpdated(LocalDateTime.ofInstant(post.getUpdatedDate(), ZoneId.of("Europe/Skopje")))
         .createdAt(LocalDateTime.ofInstant(post.getCreatedDate(), ZoneId.of("Europe/Skopje")))
         .build();
@@ -67,6 +68,7 @@ public class PostMapper {
         .creatorId(post.getCreatorId())
         .price(post.getPrice().getAmount())
         .currency(post.getPrice().getCurrency().name())
+        .category(post.getCategory() != null ? post.getCategory().name() : null)
         .externalApi(post.getFetchedFrom())
         .originalPostUrl(post.getOriginalPostURL())
         .lastTimeUpdated(LocalDateTime.ofInstant(post.getUpdatedDate(), ZoneId.of("Europe/Skopje")))
@@ -83,6 +85,7 @@ public class PostMapper {
         .location(aiResponse.getLocation())
         .price(BigDecimal.valueOf(aiResponse.getPrice()))
         .currency(aiResponse.getCurrency())
+        .category(aiResponse.getCategory())
         .build();
   }
 
@@ -100,6 +103,7 @@ public class PostMapper {
         .creatorName(postDTO.getCreatorName())
         .creatorEmail(postDTO.getCreatorEmail())
         .creatorPhoneNumber(postDTO.getCreatorPhoneNumber())
+        .category(postDTO.getCategory())
         .fetchedFrom(postDTO.getExternalApi())
         .originalPostUrl(postDTO.getOriginalPostUrl())
         .build();
