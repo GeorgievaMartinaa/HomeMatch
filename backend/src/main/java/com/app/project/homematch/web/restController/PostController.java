@@ -1,14 +1,17 @@
 package com.app.project.homematch.web.restController;
 
+import com.app.project.homematch.entity.DTO.FetchedPostDTO;
 import com.app.project.homematch.entity.DTO.PostDTO;
 import com.app.project.homematch.entity.SortDirection;
 import com.app.project.homematch.exceptions.NotAnAccommodationPostException;
 import com.app.project.homematch.exceptions.NotPostOwner;
 import com.app.project.homematch.service.PostService;
+import com.app.project.homematch.service.externalAPI.ExternalAPIClient;
 import com.app.project.homematch.service.mapper.PostMapper;
 import com.app.project.homematch.web.requests.FormPostRequest;
 import com.app.project.homematch.web.responses.OpenAIResponse;
 import com.app.project.homematch.web.responses.PostResponse;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
@@ -32,6 +35,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class PostController {
 
     private final PostService postService;
+    private final ExternalAPIClient externalAPIClient;
 
     @PostMapping("/create")
     public ResponseEntity<String> createNewPost(@RequestBody FormPostRequest formPostRequest) {
@@ -105,5 +109,10 @@ public class PostController {
       postService.deletePost(id);
       return new ResponseEntity<>("Your post is successfully deleted", HttpStatus.OK);
 
+    }
+
+    @GetMapping("/fetch")
+  public ResponseEntity<List<FetchedPostDTO>> fetchPost() {
+      return new ResponseEntity<>(externalAPIClient.fetchAllNewPostsWithin24Hours(), HttpStatus.OK);
     }
 }

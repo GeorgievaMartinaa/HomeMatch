@@ -12,4 +12,5 @@ public class FetchedPostDTO {
     private String description;
     private String fetchedFrom;
     private String urlLink;
+    private long createdAt;
 }

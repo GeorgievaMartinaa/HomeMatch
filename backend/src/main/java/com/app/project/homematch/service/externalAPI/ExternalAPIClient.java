@@ -7,5 +7,5 @@ import java.util.List;
 
 @Component
 public interface ExternalAPIClient {
-     List<FetchedPostDTO> fetchAllNewPosts();
+     List<FetchedPostDTO> fetchAllNewPostsWithin24Hours();
 }
