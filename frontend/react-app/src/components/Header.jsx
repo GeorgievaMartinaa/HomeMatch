@@ -23,7 +23,7 @@ export default function Header({page}) {
                     <div className='flex gap-3'>
                         <Button className='hover:cursor-pointer'>
                             <Plus />
-                            <Link to={'/create_post'}>Нов пост</Link>
+                            <Link to={'/create_post'}>New Post</Link>
                         </Button>
 
                         <DropdownMenu>
@@ -38,7 +38,7 @@ export default function Header({page}) {
                                         <DropdownMenuItem
                                             className='hover:cursor-pointer focus:bg-background focus:text-accent'>
                                             <User className='focus:text-accent'/>
-                                            Мој профил
+                                            My Profile
                                         </DropdownMenuItem>
                                     </Link>
                                     <DropdownMenuSeparator/>
@@ -47,7 +47,7 @@ export default function Header({page}) {
                                             className='hover:cursor-pointer focus:bg-background focus:text-accent'
                                             onClick={logout}>
                                             <LogOutIcon className='focus:text-accent'/>
-                                            Одјави се
+                                            Log Out
                                         </DropdownMenuItem>
                                     </Link>
                                 </DropdownMenuContent>
@@ -57,7 +57,7 @@ export default function Header({page}) {
                                         <DropdownMenuItem
                                             className='hover:cursor-pointer focus:bg-background focus:text-accent'>
                                             <LogInIcon className='focus:text-accent'/>
-                                            Најави се
+                                            Log In
                                         </DropdownMenuItem>
                                     </Link>
                                 </DropdownMenuContent>

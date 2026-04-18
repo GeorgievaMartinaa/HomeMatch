@@ -38,11 +38,11 @@ export default function SortAndFilter({setPageNumber, setDebouncedFilter, setSor
     }
 
     return (
-            <div className='w-full ml-1 flex flex-col justify-between gap-2 lg:flex-row'>
-              <div className="flex gap-4">
-                <div className='sm:w-1/2 w-full'>
+            <div className='w-full ml-1 flex md:flex-row justify-between gap-2 flex-col'>
+              <div className="flex gap-4 w-full md:w-1/2 lg:1/3">
+                <div className='lg:w-1/2'>
                     <InputGroup>
-                        <InputGroupInput type="text" placeholder="Пребарувај според локација..." value={filterText}
+                        <InputGroupInput type="text" placeholder="Search by location..." value={filterText}
                                          onChange={handleFilterPosts}/>
                         {filterText && (
                             <InputGroupAddon align="inline-end">
@@ -52,37 +52,34 @@ export default function SortAndFilter({setPageNumber, setDebouncedFilter, setSor
 
                     </InputGroup>
                 </div>
-                <div className='sm:w-1/4 w-full flex gap-2'>
-                    <Field className="w-fit">
+                <div className='lg:w-1/3 flex gap-2'>
+                    <Field className="">
                         <Select value={categoryFilter || "ALL"} onValueChange={handleCategoryChange}>
                             <SelectTrigger>
-                                <SelectValue placeholder="Категорија..."/>
+                                <SelectValue placeholder="Category..."/>
                             </SelectTrigger>
                             <SelectContent position="popper" className='bg-card'>
-                                <SelectItem value="ALL">Сите</SelectItem>
-                                <SelectItem value="RENT">Издавање</SelectItem>
-                                <SelectItem value="SELL">Продажба</SelectItem>
+                                <SelectItem value="ALL">All</SelectItem>
+                                <SelectItem value="RENT">Rent</SelectItem>
+                                <SelectItem value="SELL">Sell</SelectItem>
                             </SelectContent>
                         </Select>
                     </Field>
                 </div>
               </div>
-              {/*<div className="flex gap-4 items-center pr-8">*/}
-              {/*  <h3>Сортрај</h3>*/}
                 <Field className="w-fit pr-8">
                   <Select value={sortValue} onValueChange={handleSortPosts}>
                     <SelectTrigger>
                       <SelectValue placeholder="Sort by..."/>
                     </SelectTrigger>
                     <SelectContent position="popper" className=' bg-card'>
-                      <SelectItem value="priceMKD ASC">Цена <ArrowUp/> </SelectItem>
-                      <SelectItem value="priceMKD DESC">Цена <ArrowDown/> </SelectItem>
-                      <SelectItem value="createdDate ASC">Креирано на<ArrowUp/></SelectItem>
-                      <SelectItem value="createdDate DESC">Креирано на<ArrowDown/></SelectItem>
+                      <SelectItem value="priceMKD ASC">Price <ArrowUp/> </SelectItem>
+                      <SelectItem value="priceMKD DESC">Price <ArrowDown/> </SelectItem>
+                      <SelectItem value="createdDate ASC">Date created<ArrowUp/></SelectItem>
+                      <SelectItem value="createdDate DESC">Date created<ArrowDown/></SelectItem>
                     </SelectContent>
                   </Select>
                 </Field>
-              {/*</div>*/}
             </div>
     )
 }

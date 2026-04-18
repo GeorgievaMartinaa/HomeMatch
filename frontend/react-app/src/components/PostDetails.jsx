@@ -77,7 +77,7 @@ export default function PostDetails({ post, onClose, isOwner, onPostChanged }) {
           </ItemActions>
         </div>
         <Separator />
-        <ItemDescription className="text-left text-foreground">{post.description}</ItemDescription>
+        <ItemDescription className="text-left text-foreground w-full">{post.description}</ItemDescription>
         <ItemContent className="w-full text-left">
           <ItemDescription>{post.location}</ItemDescription>
           <ItemDescription>{post.priceAmount} {post.priceCurrency}</ItemDescription>

@@ -6,12 +6,12 @@ import com.app.project.homematch.service.mapper.PostMapper;
 import com.app.project.homematch.entity.DTO.FetchedPostDTO;
 import com.app.project.homematch.web.responses.OpenAIResponse;
 import com.app.project.homematch.entity.DTO.PostDTO;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.List;
 
-@Service
+@Component
 public class ExternalApiScheduler {
 
     private final List<ExternalAPIClient> externalAPIs;
