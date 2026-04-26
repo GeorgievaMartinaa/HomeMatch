@@ -88,9 +88,9 @@ export default function ProfilePage() {
         <div className='flex flex-col gap-5'>
             <Header page='home'/>
             <div className='px-8 flex text-start flex-col gap-4'>
-                <UserDetails data={userDetails} isLoading={isLoadingUserDetails} onUserUpdated={refetchUserDetails} canEdit={true} title="Податоци за тебе"/>
+                <UserDetails data={userDetails} isLoading={isLoadingUserDetails} onUserUpdated={refetchUserDetails} canEdit={true} title="Profile infos"/>
                 <div className="flex flex-col lg:flex-row items-center justify-between gap-4 pl-5 w-full">
-                    <h3 className="font-bold text-xl text-accent w-full lg:w-1/4">Твои постови</h3>
+                    <h3 className="font-bold text-xl text-accent w-full lg:w-1/4">Your posts</h3>
                     <Field className="w-full lg:w-1/6 pr-5">
                         <Select value={categoryFilter || "ALL"} onValueChange={(value) => {
                             setCategoryFilter(value === "ALL" ? "" : value);
@@ -98,12 +98,12 @@ export default function ProfilePage() {
                             pageCache.current = {};
                         }}>
                             <SelectTrigger>
-                                <SelectValue placeholder="Категорија..."/>
+                                <SelectValue placeholder="Category..."/>
                             </SelectTrigger>
                             <SelectContent position="popper" className="bg-card">
-                                <SelectItem value="ALL">Сите</SelectItem>
-                                <SelectItem value="RENT">Издавање</SelectItem>
-                                <SelectItem value="SELL">Продажба</SelectItem>
+                                <SelectItem value="ALL">All</SelectItem>
+                                <SelectItem value="RENT">Rent</SelectItem>
+                                <SelectItem value="SELL">Sells</SelectItem>
                             </SelectContent>
                         </Select>
                     </Field>

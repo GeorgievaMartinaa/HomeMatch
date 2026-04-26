@@ -47,8 +47,8 @@ export function PostCard({post, selectElement}) {
               <div className="flex flex-col gap-2 lg:flex-row lg:justify-between w-full">
                 <CardTitle className="w-[80%]">{post.title}</CardTitle>
                 {post.category && (
-                  <span className={`text-xs font-medium px-2 py-1 rounded-full w-min h-fit ${post.category === 'RENT' ? 'bg-blue-500/20 text-blue-400' : 'bg-green-500/20 text-green-400'}`}>
-                        {post.category === 'RENT' ? 'Издавање' : 'Продажба'}
+                  <span className={`text-xs font-medium px-3 py-1 rounded-full w-min h-fit ${post.category === 'RENT' ? 'bg-blue-500/20 text-blue-400' : 'bg-green-500/20 text-green-400'}`}>
+                        {post.category === 'RENT' ? 'Rent' : 'Sell'}
                     </span>
                 )}
               </div>
