@@ -17,7 +17,7 @@ export default function UserDetails({ data, isLoading, onUserUpdated, canEdit, t
   return (
     isLoading ? <Spinner /> : (
       <Item
-        className={` ${canEdit ? 'py-10 pr-10 border-4 border-double border-card rounded-xl shadow-md shadow-card-foreground/20' : 'p-0'} gap-5 w-fit flex flex-col`}>
+        className={` ${canEdit ? 'py-10 pr-10 border-4 border-double border-card rounded-xl shadow-md shadow-card-foreground/20' : 'p-0'} gap-5 flex flex-col`}>
         <div className="flex justify-between items-center w-full">
           <ItemHeader className="font-bold text-xl text-accent">{title ? title : 'User info'}</ItemHeader>
           {canEdit && (
@@ -40,7 +40,7 @@ export default function UserDetails({ data, isLoading, onUserUpdated, canEdit, t
           )}
         </div>
         <ItemSeparator />
-        <div className={`${canEdit ? 'flex gap-5 lg:gap-20 flex-wrap' : ' flex flex-col gap-2'} w-full`}>
+        <div className={`${canEdit ? 'flex gap-5 lg:gap-30 flex-wrap' : ' flex flex-col gap-2'} w-full`}>
           <div className="flex flex-col gap-2 h-1/2">
             <ItemContent className="flex flex-row gap-2 h-1/2">
               <ItemTitle>User:</ItemTitle>

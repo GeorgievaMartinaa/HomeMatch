@@ -29,7 +29,7 @@ const formSchema = z.object({
         .min(50, "Description must be at least 50 characters.")
 })
 
-const PostForm = () => {
+const PostForm = ({ onCancel }) => {
     const form = useForm({
         resolver: zodResolver(formSchema),
         defaultValues: {
@@ -109,6 +109,11 @@ const PostForm = () => {
                         <Button type="submit" disabled={isSubmitting}>
                             {isSubmitting ? "Submitting..." : "Submit"}
                         </Button>
+                        {onCancel && (
+                            <Button type="button" variant="outline" onClick={onCancel} disabled={isSubmitting}>
+                                Cancel
+                            </Button>
+                        )}
                     </Field>
                 </FieldGroup>
             </form>

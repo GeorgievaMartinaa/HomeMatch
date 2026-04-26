@@ -3,17 +3,22 @@ import Header from "@/components/Header";
 import {useContext} from "react";
 import {AuthContext} from "@/context/authContext";
 import {Button} from "@/components/ui/button";
-import {Link} from "react-router";
+import {Link, useNavigate} from "react-router";
 import {Field, FieldDescription, FieldLegend, FieldSet} from "@/components/ui/field";
 
 const CreatePostPage = () => {
     const {isAuthenticated} = useContext(AuthContext)
+    const navigate = useNavigate()
+
+    const goBack = () => {
+        navigate(-1)
+    }
     return (
         <div className='h-screen'>
             <Header/>
             {isAuthenticated ? (
                 <div className='h-screen text-left flex justify-center items-center'>
-                    <PostForm/>
+                    <PostForm onCancel={goBack}/>
                 </div>
             ) : (
                 <div className=' h-[90%] text-left flex justify-center items-center'>

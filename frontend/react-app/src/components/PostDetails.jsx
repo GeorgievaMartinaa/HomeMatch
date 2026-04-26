@@ -6,6 +6,7 @@ import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, Di
 import { Mail, Phone, User, X, ExternalLink, Globe, Pencil, Trash2 } from "lucide-react"
 import UserDetails from '@/components/UserDetails.jsx'
 import EditPostForm from '@/components/EditPostForm.jsx'
+import PostSourceBadge from '@/components/PostSourceBadge.jsx'
 import { Link } from "react-router"
 import { AuthContext } from "@/context/authContext"
 import { getUserById } from "@/repository/UserRepository"
@@ -61,13 +62,14 @@ export default function PostDetails({ post, onClose, isOwner, onPostChanged }) {
     <>
       <Item>
         <div className="flex justify-between w-full">
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-3 flex-wrap">
             <ItemTitle className="text-lg">{post.title}</ItemTitle>
             {post.category && (
               <span className={`text-xs font-medium px-2 py-0.5 rounded-full ${post.category === 'RENT' ? 'bg-blue-500/20 text-blue-400' : 'bg-green-500/20 text-green-400'}`}>
                 {post.category === 'RENT' ? 'Издавање' : 'Продажба'}
               </span>
             )}
+            {!isOwner && <PostSourceBadge fetchedFrom={post.fetchedFrom} showLabel />}
           </div>
           <ItemActions>
             <Button variant="ghost" size="icon" className="rounded-full hover:cursor-pointer"
@@ -140,13 +142,13 @@ export default function PostDetails({ post, onClose, isOwner, onPostChanged }) {
               <Dialog open={editOpen} onOpenChange={setEditOpen}>
                 <DialogTrigger asChild>
                   <Button variant="outline" size="sm" className="hover:cursor-pointer">
-                    <Pencil className="size-4 mr-1" /> Измени
+                    <Pencil className="size-4 mr-1" /> Edit
                   </Button>
                 </DialogTrigger>
                 <DialogContent>
                   <DialogHeader>
-                    <DialogTitle>Измени пост</DialogTitle>
-                    <DialogDescription>Направи промени на твојот пост.</DialogDescription>
+                    <DialogTitle>Post edit</DialogTitle>
+                    <DialogDescription>Edit your post</DialogDescription>
                   </DialogHeader>
                   <EditPostForm post={post} onSuccess={handleEditSuccess} />
                 </DialogContent>
@@ -154,18 +156,18 @@ export default function PostDetails({ post, onClose, isOwner, onPostChanged }) {
               <Dialog open={deleteOpen} onOpenChange={setDeleteOpen}>
                 <DialogTrigger asChild>
                   <Button variant="destructive" size="sm" className="hover:cursor-pointer">
-                    <Trash2 className="size-4 mr-1" /> Избриши
+                    <Trash2 className="size-4 mr-1" /> Delete
                   </Button>
                 </DialogTrigger>
                 <DialogContent>
                   <DialogHeader>
-                    <DialogTitle>Избриши пост</DialogTitle>
-                    <DialogDescription>Дали сте сигурни дека сакате да го избришете овој пост? Оваа акција не може да се врати.</DialogDescription>
+                    <DialogTitle>Delete post</DialogTitle>
+                    <DialogDescription>Are you sure you want to delete this post? This action cannot be undone!</DialogDescription>
                   </DialogHeader>
                   <div className="flex gap-2 justify-end">
-                    <Button variant="outline" onClick={() => setDeleteOpen(false)} className="hover:cursor-pointer">Откажи</Button>
+                    <Button variant="outline" onClick={() => setDeleteOpen(false)} className="hover:cursor-pointer">Cancel</Button>
                     <Button variant="destructive" onClick={handleDelete} disabled={isDeleting} className="hover:cursor-pointer">
-                      {isDeleting ? "Бришење..." : "Избриши"}
+                      {isDeleting ? "Deleting..." : "Delete"}
                     </Button>
                   </div>
                 </DialogContent>

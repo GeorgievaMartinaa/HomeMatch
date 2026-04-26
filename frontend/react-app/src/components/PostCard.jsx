@@ -1,7 +1,8 @@
 import {Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle} from "@/components/ui/card";
 import {getPostById} from "@/repository/PostRepository";
+import PostSourceBadge from "@/components/PostSourceBadge";
 
-export function PostCard({post, selectElement}) {
+export function PostCard({post, selectElement, isSelected, isOwner}) {
 
     const postDetails = async () => {
         try {
@@ -41,16 +42,19 @@ export function PostCard({post, selectElement}) {
         }
     }
     return (
-        <Card className="w-full sm:w-[calc(50%-0.5rem)] md:w-[calc(33.333%-0.67rem)] lg:w-[calc(25%-0.75rem)] gap-4 hover:cursor-pointer"
+        <Card className={`w-full sm:w-[calc(50%-0.5rem)] md:w-[calc(33.333%-0.67rem)] lg:w-[calc(25%-0.75rem)] gap-4 hover:cursor-pointer transition-shadow ${isSelected ? 'ring-2 ring-accent/60' : ''}`}
               onClick={postDetails}>
             <CardHeader className='text-start gap-1'>
               <div className="flex flex-col gap-2 lg:flex-row lg:justify-between w-full">
                 <CardTitle className="w-[80%]">{post.title}</CardTitle>
-                {post.category && (
-                  <span className={`text-xs font-medium px-3 py-1 rounded-full w-min h-fit ${post.category === 'RENT' ? 'bg-blue-500/20 text-blue-400' : 'bg-green-500/20 text-green-400'}`}>
-                        {post.category === 'RENT' ? 'Rent' : 'Sell'}
-                    </span>
-                )}
+                <div className="flex items-center gap-2">
+                  {post.category && (
+                    <span className={`text-xs font-medium px-3 py-1 rounded-full w-min h-fit ${post.category === 'RENT' ? 'bg-blue-500/20 text-blue-400' : 'bg-green-500/20 text-green-400'}`}>
+                          {post.category === 'RENT' ? 'Rent' : 'Sell'}
+                      </span>
+                  )}
+                  {!isOwner && <PostSourceBadge fetchedFrom={post.fetchedFrom} />}
+                </div>
               </div>
                 <CardDescription className='line-clamp-2'>{post.location}</CardDescription>
                 <CardDescription>{post.priceAmount} {post.priceCurrency}</CardDescription>

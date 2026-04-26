@@ -46,7 +46,7 @@ export default function PostList({isLoading, posts, totalPages, setPageNumber, p
                     <div className='flex gap-2'>
                         <div className={`flex flex-wrap gap-2 ${selectedElement ? 'w-full sm:w-2/3 h-min' : 'w-full'}`}>
                             {posts.map(post => {
-                                return <PostCard post={post} key={post.id} selectElement={changeSelectedElement}/>
+                                return <PostCard post={post} key={post.id} selectElement={changeSelectedElement} isSelected={selectedElement?.id === post.id} isOwner={isOwner}/>
                             })}
                         </div>
                         {selectedElement &&
