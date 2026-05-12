@@ -43,12 +43,12 @@ export default function UserDetails({ data, isLoading, onUserUpdated, canEdit, t
         <div className={`${canEdit ? 'flex gap-5 lg:gap-30 flex-wrap' : ' flex flex-col gap-2'} w-full`}>
           <div className="flex flex-col gap-2 h-1/2">
             <ItemContent className="flex flex-row gap-2 h-1/2">
-              <ItemTitle>User:</ItemTitle>
-              <ItemDescription>{data.firstName} {data.lastName}</ItemDescription>
-            </ItemContent>
-            <ItemContent className="flex flex-row gap-2 h-1/2">
               <ItemTitle>Username:</ItemTitle>
               <ItemDescription>{data.username}</ItemDescription>
+            </ItemContent>
+            <ItemContent className="flex flex-row gap-2 h-1/2">
+              <ItemTitle>User:</ItemTitle>
+              <ItemDescription>{data.firstName} {data.lastName}</ItemDescription>
             </ItemContent>
           </div>
           <div className="flex flex-col gap-2 h-1/2">

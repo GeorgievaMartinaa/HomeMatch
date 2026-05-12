@@ -13,7 +13,6 @@ import {
 import {Input} from "@/components/ui/input";
 import {Textarea} from "@/components/ui/textarea";
 import {Button} from "@/components/ui/button";
-import {Toaster} from "@/components/ui/sonner";
 import {toast} from "sonner";
 import {useContext} from "react";
 import {AuthContext} from "@/context/authContext";
@@ -44,16 +43,15 @@ const PostForm = ({ onCancel }) => {
     async function onSubmit(data) {
         try {
             const text = await createPost(data, token)
-            toast.success(text, { position: "top-center", style: {backgroundColor: 'green'} })
+            toast.success(text)
         } catch (error) {
-            toast.error(error.message, { position: "top-center", style: {backgroundColor: 'red'} })
+            toast.error(error.message)
         }
         form.reset();
     }
 
     return (
-        <div className="w-full max-w-lg">
-            <Toaster />
+        <div className="w-full max-w-lg p-8 border-1 border-solid border-white/50 rounded-lg">
             <form onSubmit={form.handleSubmit(onSubmit)}>
                 <FieldGroup>
                     <FieldSet>

@@ -10,5 +10,5 @@ CREATE TABLE IF NOT EXISTS `post`
     `price_currency`    varchar(10)     not null,
     `original_post_url` varchar(255),
     `fetched_from`      varchar(100),
-    `creator_id`        bigint
+    `creator_id`        bigint unsigned
 )ENGINE=InnoDB DEFAULT CHARSET=UTF8;

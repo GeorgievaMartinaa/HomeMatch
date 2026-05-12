@@ -66,7 +66,7 @@ export default function PostDetails({ post, onClose, isOwner, onPostChanged }) {
             <ItemTitle className="text-lg">{post.title}</ItemTitle>
             {post.category && (
               <span className={`text-xs font-medium px-2 py-0.5 rounded-full ${post.category === 'RENT' ? 'bg-blue-500/20 text-blue-400' : 'bg-green-500/20 text-green-400'}`}>
-                {post.category === 'RENT' ? 'Издавање' : 'Продажба'}
+                {post.category === 'RENT' ? 'Rent' : 'Sell'}
               </span>
             )}
             {!isOwner && <PostSourceBadge fetchedFrom={post.fetchedFrom} showLabel />}
@@ -87,7 +87,7 @@ export default function PostDetails({ post, onClose, isOwner, onPostChanged }) {
         <Separator />
         {post.creatorId ? (
           <ItemContent className="w-full text-left">
-            <ItemTitle>Детали за контакт:</ItemTitle>
+            <ItemTitle>Contact details:</ItemTitle>
             <div className="flex flex-col gap-2 pl-2 pt-2">
               <div className="flex items-center gap-2">
                 <User size="16" />

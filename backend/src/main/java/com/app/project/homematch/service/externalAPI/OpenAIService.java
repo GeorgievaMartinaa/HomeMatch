@@ -14,70 +14,86 @@ import java.util.Map;
 @Service
 public class OpenAIService {
 
-    private final WebClient openAiWebClient;
-    private final ObjectMapper objectMapper;
+  private final WebClient openAiWebClient;
+  private final ObjectMapper objectMapper;
 
-    public OpenAIService(@Qualifier("openAIWebClient") WebClient openAiWebClient, ObjectMapper objectMapper) {
-        this.openAiWebClient = openAiWebClient;
-        this.objectMapper = objectMapper;
-    }
+  public OpenAIService(@Qualifier("openAIWebClient") WebClient openAiWebClient, ObjectMapper objectMapper) {
+    this.openAiWebClient = openAiWebClient;
+    this.objectMapper = objectMapper;
+  }
 
-    public OpenAIResponse analyzePost (String postText){
-        String systemPrompt = """
-                Ти си помошник кој анализира текст.
-                Твоја задача е да препознаеш дали текстот се однесува за издавање или продажба на сместување и да вратиш JSON со:
-                "isAccommodationPost": true, "location": string, "price": int, "currency": string, "category": string
-                За "location" треба ја препознаеш конкретната локација (улица, број град, населба).
-                Ако не можеш со сигурност да ја одредиш цената како број, за "price" врати 0.
-                Доколку цената е во евра, за currency стави EUR.
-                Доколку цената е во македонски денари, за currency стави MKD.
-                Доколку цената е во некоја друга валута, конвертирај ја цената во македонски денари
-                и за currency стави MKD.
-                Доколку не можеш да ја одредиш валутата или ако нема валута стави NONE.
-                За "category" одреди дали постот е за издавање (RENT) или продажба (SELL) на сместување.
-                Доколку текстот зборува за кирија, месечна рата, издавање, наем - стави RENT.
-                Доколку текстот зборува за продажба, купување, продавање - стави SELL.
-                Доколку текстот не се однесува за сместување, врати JSON со "isAccommodationPost": false, 
-                и null вредности за "location", "price", "currency" и "category".
-                """;
-
-        Map<String, Object> requestBody = Map.of(
-                "model", "gpt-4.1-nano",
-                "temperature", 0.2,
-                "messages", List.of(
-                        Map.of("role", "system", "content", systemPrompt),
-                        Map.of("role", "user", "content", postText)
-                )
-        );
-
-        String openAiResponse = openAiWebClient.post()
-                .bodyValue(requestBody)
-                .retrieve()
-                .bodyToMono(String.class)
-                .block();
-
-        return convertStringToOpenAiResponse(openAiResponse);
-    }
-
-    private OpenAIResponse convertStringToOpenAiResponse(String openAiResponse){
-
-        OpenAIResponse response = new OpenAIResponse();
-
-        try {
-            JsonNode root = objectMapper.readTree(openAiResponse);
-            String content = root.path("choices").get(0).path("message").path("content").asText();
-
-            response = objectMapper.readValue(content, OpenAIResponse.class);
-
-            System.out.println("Response: " + response);
-
-        } catch (JsonProcessingException e) {
-            e.printStackTrace();
-
+  public OpenAIResponse analyzePost(String postText) {
+    String systemPrompt = """
+        You are an AI assistant that analyzes text.
+        
+        Your task is to determine whether the provided text refers to renting (издавање) or selling (продажба) accommodation (real estate).
+        
+        You must return a valid JSON object with the following structure:
+        
+        {
+          "isAccommodationPost": boolean,
+          "location": string | null,
+          "price": number,
+          "currency": string | null,
+          "category": string | null
         }
+        Rules:
+        1.Accommodation Detection
+          If the text refers to renting or selling residential accommodation (apartment, house, flat, studio, room, etc.), set:
+          "isAccommodationPost": true
+          Otherwise, set:
+          "isAccommodationPost": false
+          and return null for "location", "currency", and "category", and 0 for "price".
+        2.Location
+          Extract the most specific location mentioned (street name, street number, neighborhood, city).
+          If no clear location is found, return null.
+        3.Price
+          Extract the numeric price value only (no text).
+          If the price cannot be confidently determined as a number, return 0.
+        4.Currency Handling
+          If price is in euros → return "EUR".
+          If price is in Macedonian denars → return "MKD".
+          If price is in another currency → convert it to Macedonian denars (MKD) and return "MKD".
+          If currency cannot be determined or is not mentioned → return "NONE".
+        5.Category
+          If the text refers to renting (e.g., rent, monthly payment, lease, for rent, rental, кирија, наем, издавање) → return "RENT".
+          If the text refers to selling (e.g., sale, sell, buying, for sale, продажба, продава) → return "SELL".
+          If it is not related to accommodation → return null.
+        """;
 
+    Map<String, Object> requestBody = Map.of(
+        "model", "gpt-4.1-nano",
+        "temperature", 0.2,
+        "messages", List.of(
+            Map.of("role", "system", "content", systemPrompt),
+            Map.of("role", "user", "content", postText)
+        )
+    );
 
-        return response;
+    String openAiResponse = openAiWebClient.post()
+        .bodyValue(requestBody)
+        .retrieve()
+        .bodyToMono(String.class)
+        .block();
 
+    return convertStringToOpenAiResponse(openAiResponse);
+  }
+
+  private OpenAIResponse convertStringToOpenAiResponse(String openAiResponse) {
+
+    OpenAIResponse response = new OpenAIResponse();
+
+    try {
+      JsonNode root = objectMapper.readTree(openAiResponse);
+      String content = root.path("choices").get(0).path("message").path("content").asText();
+
+      response = objectMapper.readValue(content, OpenAIResponse.class);
+
+      System.out.println("Response: " + response);
+    } catch (JsonProcessingException e) {
+      e.printStackTrace();
     }
+
+    return response;
+  }
 }

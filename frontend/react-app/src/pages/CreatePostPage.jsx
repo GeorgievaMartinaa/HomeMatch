@@ -17,7 +17,7 @@ const CreatePostPage = () => {
         <div className='h-screen'>
             <Header/>
             {isAuthenticated ? (
-                <div className='h-screen text-left flex justify-center items-center'>
+                <div className='h-screen text-left flex justify-center items-center '>
                     <PostForm onCancel={goBack}/>
                 </div>
             ) : (

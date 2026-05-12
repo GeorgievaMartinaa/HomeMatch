@@ -5,7 +5,6 @@ import {Field, FieldError, FieldGroup, FieldLabel, FieldSet} from "@/components/
 import {Input} from "@/components/ui/input";
 import {Textarea} from "@/components/ui/textarea";
 import {Button} from "@/components/ui/button";
-import {Toaster} from "@/components/ui/sonner";
 import {toast} from "sonner";
 import {useContext} from "react";
 import {AuthContext} from "@/context/authContext";
@@ -36,16 +35,15 @@ export default function EditPostForm({post, onSuccess}) {
     async function onSubmit(data) {
         try {
             const text = await editPost(post.id, data, token)
-            toast.success(text, {position: "top-center", style: {backgroundColor: 'green'}})
+            toast.success(text)
             onSuccess();
         } catch (error) {
-            toast.error(error.message, {position: "top-center", style: {backgroundColor: 'red'}})
+            toast.error(error.message)
         }
     }
 
     return (
         <div className="w-full max-w-lg">
-            <Toaster/>
             <form onSubmit={form.handleSubmit(onSubmit)}>
                 <FieldGroup>
                     <FieldSet>

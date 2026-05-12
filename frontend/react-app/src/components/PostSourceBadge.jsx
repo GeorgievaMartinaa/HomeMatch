@@ -19,7 +19,7 @@ export default function PostSourceBadge({ fetchedFrom, showLabel = false }) {
   const isReddit = fetchedFrom === "Reddit"
   const label = isReddit ? "Reddit" : "HomeMatch"
   const Icon = isReddit ? RedditIcon : House
-  const color = isReddit ? "text-orange-500" : "text-accent"
+  const color = isReddit ? "text-orange-500" : "text-orange-300"
 
   if (!showLabel) {
     return (
@@ -31,7 +31,7 @@ export default function PostSourceBadge({ fetchedFrom, showLabel = false }) {
 
   const pill = isReddit
     ? "bg-orange-500/20 text-orange-400"
-    : "bg-accent/20 text-accent"
+    : "bg-accent/20 text-orange-200"
 
   return (
     <span className={`inline-flex items-center gap-1 rounded-full text-xs font-medium px-2 py-0.5 ${pill}`}>

@@ -42,13 +42,13 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(PostNotFoundException.class)
-    public ErrorResponse handlePostNotFoundException(PostNotFoundException ex) {
-        return ErrorResponse.create(ex, HttpStatus.NOT_FOUND, ex.getMessage());
+    public  ResponseEntity<String> handlePostNotFoundException(PostNotFoundException ex) {
+        return  new ResponseEntity<>(ex.getMessage(), HttpStatus.NOT_FOUND);
     }
 
     @ExceptionHandler(ExpiredVerificationTokenException.class)
-    public ErrorResponse handleExpiredVerificationTokenException(ExpiredVerificationTokenException ex) {
-        return ErrorResponse.create(ex, HttpStatus.BAD_REQUEST, ex.getMessage());
+    public  ResponseEntity<String> handleExpiredVerificationTokenException(ExpiredVerificationTokenException ex) {
+        return  new ResponseEntity<>(ex.getMessage(), HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(UserNotVerifiedException.class)
@@ -63,8 +63,8 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(InvalidVerificationTokenException.class)
-    public ErrorResponse handleInvalidVerificationTokenException(InvalidVerificationTokenException ex) {
-        return ErrorResponse.create(ex, HttpStatus.BAD_REQUEST, ex.getMessage());
+    public  ResponseEntity<String> handleInvalidVerificationTokenException(InvalidVerificationTokenException ex) {
+        return  new ResponseEntity<>(ex.getMessage(), HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(UserNotFoundException.class)
@@ -98,7 +98,7 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(NotAnAccommodationPostException.class)
-    public ErrorResponse handleNotAnAccommodationPostException(NotAnAccommodationPostException ex) {
-        return ErrorResponse.create(ex, HttpStatus.BAD_REQUEST, ex.getMessage());
+    public  ResponseEntity<String> handleNotAnAccommodationPostException(NotAnAccommodationPostException ex) {
+        return new ResponseEntity<>(ex.getMessage(), HttpStatus.BAD_REQUEST);
     }
 }

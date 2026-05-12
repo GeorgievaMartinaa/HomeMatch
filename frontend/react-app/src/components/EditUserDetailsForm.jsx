@@ -3,7 +3,6 @@ import {AuthContext} from "@/context/authContext.jsx";
 import {editUser} from "@/repository/UserRepository";
 import {Controller, useForm} from "react-hook-form";
 import {toast} from "sonner";
-import {Toaster} from "@/components/ui/sonner.jsx";
 import {Field, FieldError, FieldGroup, FieldLabel, FieldSet} from "@/components/ui/field.jsx";
 import {Input} from "@/components/ui/input.jsx";
 import {Textarea} from "@/components/ui/textarea.jsx";
@@ -46,11 +45,11 @@ export default function EditUserDetailsForm({data, onSuccess}) {
 
         try {
             await editUser(editData, token);
-            toast.success("Profile updated successfully", {position: "top-center", style: {backgroundColor: "green"}});
+            toast.success("Profile updated successfully");
             form.reset();
             if (onSuccess) onSuccess();
         } catch (error) {
-            toast.error(error.message, {position: "top-center", style: {backgroundColor: "red"}});
+            toast.error(error.message);
         }
     }
 
@@ -60,7 +59,6 @@ export default function EditUserDetailsForm({data, onSuccess}) {
 
     return (
         <div className="w-full max-w-lg">
-            <Toaster/>
             <form onSubmit={form.handleSubmit(onSubmit)}>
                 <FieldGroup>
                     <FieldSet>

@@ -41,7 +41,7 @@ public class PostController {
     public ResponseEntity<String> createNewPost(@RequestBody FormPostRequest formPostRequest) {
         String SUCCESS_MESSAGE = "Your post is successfully created!";
 
-        String postText = formPostRequest.getTitle() + formPostRequest.getDescription();
+        String postText = formPostRequest.getTitle() +'\n'+ formPostRequest.getDescription();
 
         OpenAIResponse response = postService.analyzePost(postText);
 

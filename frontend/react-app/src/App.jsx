@@ -7,19 +7,23 @@ import RegistrationSuccess from "@/pages/auth/RegistrationSuccess";
 import HomePage from "@/pages/HomePage";
 import CreatePostPage from "@/pages/CreatePostPage";
 import ProfilePage from "@/pages/ProfilePage.jsx";
+import {Toaster} from "@/components/ui/sonner";
 
 function App() {
     return (
-        <Routes>
-            <Route element={<ProtectedRoute/>}>
-                <Route path={'profile'} element={<ProfilePage/>}/>
-            </Route>
-            <Route path={'login'} element={<LoginPage/>}/>
-            <Route path={'register'} element={<RegisterPage/>}/>
-            <Route path={'/success_registration'} element={<RegistrationSuccess/>}/>
-            <Route path={'/create_post'} element={<CreatePostPage/>}/>
-            <Route path={'/'} element={<HomePage/>}/>
-        </Routes>
+        <>
+            <Toaster/>
+            <Routes>
+                <Route element={<ProtectedRoute/>}>
+                    <Route path={'profile'} element={<ProfilePage/>}/>
+                </Route>
+                <Route path={'login'} element={<LoginPage/>}/>
+                <Route path={'register'} element={<RegisterPage/>}/>
+                <Route path={'/success_registration'} element={<RegistrationSuccess/>}/>
+                <Route path={'/create_post'} element={<CreatePostPage/>}/>
+                <Route path={'/'} element={<HomePage/>}/>
+            </Routes>
+        </>
     )
 }
 

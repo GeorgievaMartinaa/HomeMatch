@@ -42,7 +42,7 @@ export function PostCard({post, selectElement, isSelected, isOwner}) {
         }
     }
     return (
-        <Card className={`w-full sm:w-[calc(50%-0.5rem)] md:w-[calc(33.333%-0.67rem)] lg:w-[calc(25%-0.75rem)] gap-4 hover:cursor-pointer transition-shadow ${isSelected ? 'ring-2 ring-accent/60' : ''}`}
+        <Card className={`w-full sm:w-[calc(50%-0.5rem)] md:w-[calc(33.333%-0.67rem)] lg:w-[calc(25%-0.75rem)] gap-4 hover:cursor-pointer transition-shadow ${isSelected ? 'ring-2 ring-accent/40' : ''}`}
               onClick={postDetails}>
             <CardHeader className='text-start gap-1'>
               <div className="flex flex-col gap-2 lg:flex-row lg:justify-between w-full">
