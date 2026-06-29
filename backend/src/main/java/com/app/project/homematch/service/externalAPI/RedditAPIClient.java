@@ -12,6 +12,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
+import org.springframework.web.util.HtmlUtils;
 
 import java.time.Instant;
 import java.time.OffsetDateTime;
@@ -56,7 +57,7 @@ public class RedditAPIClient implements ExternalAPIClient {
         for (AtomEntry entry : feed.entries) {
             FetchedPostDTO post = new FetchedPostDTO();
             post.setTitle(entry.title);
-            post.setDescription(entry.content);
+            post.setDescription(extractPlainDescription(entry.content));
             post.setFetchedFrom("Reddit");
             post.setUrlLink(entry.link != null ? entry.link.href : null);
 
@@ -67,6 +68,27 @@ public class RedditAPIClient implements ExternalAPIClient {
         }
 
         return filterLast24Hours(posts);
+    }
+
+    private static final String BODY_START = "<!-- SC_OFF -->";
+    private static final String BODY_END = "<!-- SC_ON -->";
+
+    private String extractPlainDescription(String html) {
+        if (html == null) {
+            return "";
+        }
+        int start = html.indexOf(BODY_START);
+        if (start < 0) {
+            return "";
+        }
+        String body = html.substring(start + BODY_START.length());
+        int end = body.indexOf(BODY_END);
+        if (end >= 0) {
+            body = body.substring(0, end);
+        }
+        body = body.replaceAll("<[^>]+>", " ");
+        body = HtmlUtils.htmlUnescape(body);
+        return body.replaceAll("\\s+", " ").trim();
     }
 
     private List<FetchedPostDTO> filterLast24Hours(List<FetchedPostDTO> posts) {

@@ -53,7 +53,7 @@ public class PostServiceImpl implements PostService {
   }
 
   @Override
-  @Transactional(readOnly = true)
+  @Transactional
   public void newFetchedPost(PostDTO postDTO) {
     createNewPost(postDTO);
   }
