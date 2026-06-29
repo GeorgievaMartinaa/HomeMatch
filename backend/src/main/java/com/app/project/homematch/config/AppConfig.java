@@ -29,12 +29,15 @@ public class AppConfig {
     @Value("${openai.api.key}")
     private String openAiApiKey;
 
+    @Value("${reddit.user-agent}")
+    private String redditUserAgent;
+
 
     @Bean
     public WebClient redditWebClient(){
         return WebClient.builder()
                 .baseUrl("https://www.reddit.com")
-                .defaultHeader(HttpHeaders.USER_AGENT, "spring-boot-client")
+                .defaultHeader(HttpHeaders.USER_AGENT, redditUserAgent)
                 .build();
 
     }
