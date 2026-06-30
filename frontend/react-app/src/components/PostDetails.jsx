@@ -22,7 +22,6 @@ export default function PostDetails({ post, onClose, isOwner, onPostChanged }) {
   const [isDeleting, setIsDeleting] = useState(false)
 
   async function fetchCreatorDetails() {
-    if (creatorDetails) return
     try {
       const data = await getUserById(post.creatorId)
       setCreatorDetails(data)

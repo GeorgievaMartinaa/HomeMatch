@@ -88,7 +88,7 @@ export default function ProfilePage() {
         <div className='flex flex-col gap-5'>
             <Header page='home'/>
             <div className='px-8 flex text-start flex-col gap-4'>
-                <UserDetails data={userDetails} isLoading={isLoadingUserDetails} onUserUpdated={refetchUserDetails} canEdit={true} title="Profile infos"/>
+                <UserDetails data={userDetails} isLoading={isLoadingUserDetails} onUserUpdated={refetchUserDetails} canEdit={true} title="Profile Info"/>
                 <div className="flex flex-col lg:flex-row items-center justify-between gap-4 pl-5 w-full">
                     <h3 className="font-bold text-xl text-accent w-full lg:w-1/4">Your posts</h3>
                     <Field className="w-full lg:w-1/6 pr-5">

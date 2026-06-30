@@ -34,7 +34,7 @@ export function PostCard({post, selectElement, isSelected, isOwner}) {
                 return `${diffHours} hours ago`;
             }
         } else {
-            return postDate.toLocaleDateString('en-US', {
+            return postDate.toLocaleDateString('en-UK', {
                 year: 'numeric',
                 month: '2-digit',
                 day: 'numeric'

@@ -171,7 +171,7 @@ export default function EditUserDetailsForm({data, onSuccess}) {
                                 control={form.control}
                                 render={({field, fieldState}) => (
                                     <Field>
-                                        <FieldLabel htmlFor="user_aboutMe">About Me</FieldLabel>
+                                        <FieldLabel htmlFor="user_aboutMe">More info</FieldLabel>
                                         <Textarea
                                             id="user_aboutMe"
                                             {...field}

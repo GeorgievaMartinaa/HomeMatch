@@ -31,7 +31,7 @@ export function LoginForm() {
 
     useEffect(() => {
         if (isAuthenticated) {
-            navigate('/');
+            navigate(-1);
         }
     }, [isAuthenticated]);
 
@@ -65,7 +65,6 @@ export function LoginForm() {
         const token = await response.text()
 
         login(token)
-        navigate("/")
     }
 
     async function handleResendVerification(event) {
